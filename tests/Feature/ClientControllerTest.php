@@ -47,7 +47,7 @@ final class ClientControllerTest extends TestCase
     {
         Client::factory()->create();
         $this->assertDatabaseCount('clients', 1);
-        $client_id = Client::first()->id;
+        $client_id = Client::first()['id'] ?? null;
         $resp = $this->delete(route("clients.destroy", ['client' => $client_id]));
         $resp->assertOk();
         $this->assertDatabaseCount('clients', 0);

@@ -11,76 +11,82 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return string
      */
     public function index()
     {
-        //
+        return 'index';
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return string
      */
     public function create()
     {
-        //
+        return 'create';
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreProjectRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreProjectRequest $request
+     * @return void
      */
     public function store(StoreProjectRequest $request)
     {
-        Project::create($request->validated());
+        $data = $request->safe(['name', 'deadline', 'client_id']);
+        Project::create([
+            'name' => $data['name'],
+            'deadline' => $data['deadline'],
+            'client_id' => $data['client_id'],
+        ]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
+     * @param Project $project
+     * @return Project
      */
     public function show(Project $project)
     {
-        //
+        return $project;
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
+     * @param Project $project
+     * @return string
      */
     public function edit(Project $project)
     {
-        //
+        return 'edit';
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateProjectRequest  $request
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
+     * @param UpdateProjectRequest $request
+     * @param Project $project
+     * @return string
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
-        //
+        return 'update';
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
+     * @param Project $project
+     * @return string
      */
     public function destroy(Project $project)
     {
         $project->delete();
+        return 'destroy';
     }
 }

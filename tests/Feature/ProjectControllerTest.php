@@ -32,7 +32,7 @@ final class ProjectControllerTest extends TestCase
         $data = [
             'name' => $this->faker->name(),
             'deadline' => now(),
-            'client_id' => Client::first()->id,
+            'client_id' => Client::first()['id'] ?? null,
         ];
         $resp = $this->post(route('projects.store'), $data);
 
@@ -66,7 +66,7 @@ final class ProjectControllerTest extends TestCase
     {
         Project::factory()->create();
         $project = Project::first();
-        $this->assertInstanceOf(Client::class, $project->owner);
-        $this->assertSame(Client::first()->id, $project->owner->id);
+        $this->assertInstanceOf(Client::class, $project['owner'] ?? null);
+        $this->assertSame(Client::first()['id'] ?? null, $project['owner']['id'] ?? null);
     }
 }

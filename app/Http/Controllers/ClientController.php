@@ -5,31 +5,30 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Http\Requests\StoreClientRequest;
 use App\Http\Requests\UpdateClientRequest;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
 
 class ClientController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return Collection
      */
     public function index()
     {
-        //
+        return Client::all();
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return string
      */
     public function create()
     {
-        //
+        return 'create';
     }
 
     /**
@@ -40,41 +39,47 @@ class ClientController extends Controller
      */
     public function store(StoreClientRequest $request)
     {
-        Client::create($request->validated());
+        $data = $request->safe(['name', 'username', 'email', 'password']);
+        Client::create([
+            'name' => $data['name'],
+            'username' => $data['username'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+        ]);
     }
 
     /**
      * Display the specified resource.
      *
      * @param Client $client
-     * @return Response
+     * @return Client
      */
     public function show(Client $client)
     {
-        //
+        return $client;
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param Client $client
-     * @return Response
+     * @return Client
      */
     public function edit(Client $client)
     {
-        //
+        return $client;
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateClientRequest  $request
+     * @param UpdateClientRequest $request
      * @param Client $client
-     * @return Response
+     * @return string
      */
     public function update(UpdateClientRequest $request, Client $client)
     {
-        //
+        return 'update';
     }
 
     /**

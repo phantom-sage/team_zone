@@ -17,11 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->timestamp('deadline');
-            $table->foreignId('client_id')
-                ->nullable()
-                ->references('id')
-                ->on('clients')
-                ->onUpdate('cascade');
             $table->timestamps();
         });
     }

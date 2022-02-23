@@ -106,7 +106,7 @@ final class LoginTest extends TestCase
     {
         User::factory()->create();
         $data = [
-            'username' => User::first()->username,
+            'username' => User::first()['username'] ?? null,
             'password' => 'passwords',
         ];
         $resp = $this->post('/api/users/admin/login', $data);
@@ -123,7 +123,7 @@ final class LoginTest extends TestCase
     {
         User::factory()->create();
         $data = [
-            'email' => User::first()->email,
+            'email' => User::first()['email'] ?? null,
             'password' => 'password',
         ];
         $resp = $this->post('/api/users/admin/login', $data);
@@ -157,7 +157,7 @@ final class LoginTest extends TestCase
     {
         User::factory()->create();
         $data = [
-            'email' => User::first()->email,
+            'email' => User::first()['email'] ?? null,
             'password' => 'passwords',
         ];
         $resp = $this->post('/api/users/admin/login', $data);
@@ -192,7 +192,7 @@ final class LoginTest extends TestCase
     {
         Client::factory()->create();
         $data = [
-            'username' => Client::first()->username,
+            'username' => Client::first()['username'] ?? null,
             'password' => 'password',
         ];
         $resp = $this->post('/api/users/client/login', $data);
@@ -226,7 +226,7 @@ final class LoginTest extends TestCase
     {
         Client::factory()->create();
         $data = [
-            'username' => Client::first()->username,
+            'username' => Client::first()['username'] ?? null,
             'password' => 'passwords',
         ];
         $resp = $this->post('/api/users/client/login', $data);
@@ -260,7 +260,7 @@ final class LoginTest extends TestCase
     {
         Client::factory()->create();
         $data = [
-            'email' => Client::first()->email,
+            'email' => Client::first()['email'] ?? null,
             'password' => 'passwords',
         ];
         $resp = $this->post('/api/users/client/login', $data);
@@ -277,7 +277,7 @@ final class LoginTest extends TestCase
     {
         Client::factory()->create();
         $data = [
-            'email' => Client::first()->email,
+            'email' => Client::first()['email'] ?? null,
             'password' => 'password',
         ];
         $resp = $this->post('/api/users/client/login', $data);

@@ -6,13 +6,14 @@ use App\Models\TeamMember;
 use App\Http\Requests\StoreTeamMemberRequest;
 use App\Http\Requests\UpdateTeamMemberRequest;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
 
 class TeamMemberController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return void
      */
     public function index()
     {
@@ -22,7 +23,7 @@ class TeamMemberController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return void
      */
     public function create()
     {
@@ -37,14 +38,21 @@ class TeamMemberController extends Controller
      */
     public function store(StoreTeamMemberRequest $request)
     {
-        TeamMember::create($request->validated());
+        $data = $request->safe(['name', 'username', 'password', 'email', 'type']);
+        TeamMember::create([
+            'name' => $data['name'],
+            'username' => $data['username'],
+            'password' => Hash::make($data['password']),
+            'email' => $data['email'],
+            'type' => $data['type'],
+        ]);
     }
 
     /**
      * Display the specified resource.
      *
      * @param TeamMember $teamMember
-     * @return Response
+     * @return void
      */
     public function show(TeamMember $teamMember)
     {
@@ -55,7 +63,7 @@ class TeamMemberController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param TeamMember $teamMember
-     * @return Response
+     * @return void
      */
     public function edit(TeamMember $teamMember)
     {
@@ -67,7 +75,7 @@ class TeamMemberController extends Controller
      *
      * @param  \App\Http\Requests\UpdateTeamMemberRequest  $request
      * @param TeamMember $teamMember
-     * @return Response
+     * @return void
      */
     public function update(UpdateTeamMemberRequest $request, TeamMember $teamMember)
     {

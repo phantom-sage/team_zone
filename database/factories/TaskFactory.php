@@ -20,6 +20,7 @@ class TaskFactory extends Factory
             'name' => $this->faker->name(),
             'duration' => $this->faker->date(),
             'status' => 'Completed',
+            'description' => $this->faker->sentence(),
         ];
     }
 }

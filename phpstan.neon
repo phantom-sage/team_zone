@@ -8,7 +8,7 @@ parameters:
         - tests
 
     # The level 9 is the highest level
-    level: 5
+    level: 9
 
     excludePaths:
         - app/Http/Controller/Controller.php
@@ -63,3 +63,4 @@ parameters:
         - webpack.mix.js
 
     checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false

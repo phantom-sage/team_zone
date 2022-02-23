@@ -12,21 +12,21 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return string
      */
     public function index()
     {
-        //
+        return 'index';
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return string
      */
     public function create()
     {
-        //
+        return 'create';
     }
 
     /**
@@ -37,51 +37,57 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-        Task::create($request->validated());
+        $data = $request->safe(['name', 'duration', 'status', 'description']);
+        Task::create([
+            'name' => $data['name'],
+            'duration' => $data['duration'],
+            'status' => $data['status'],
+            'description' => $data['description'],
+        ]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Task  $task
-     * @return Response
+     * @param Task $task
+     * @return string
      */
     public function show(Task $task)
     {
-        //
+        return 'show';
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Task  $task
-     * @return Response
+     * @param Task $task
+     * @return string
      */
     public function edit(Task $task)
     {
-        //
+        return 'edit';
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateTaskRequest  $request
-     * @param  \App\Models\Task  $task
-     * @return Response
+     * @param UpdateTaskRequest $request
+     * @param Task $task
+     * @return string
      */
     public function update(UpdateTaskRequest $request, Task $task)
     {
-        //
+        return 'update';
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Task  $task
-     * @return Response
+     * @param Task $task
+     * @return string
      */
     public function destroy(Task $task)
     {
-        //
+        return 'destroy';
     }
 }

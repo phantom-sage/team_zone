@@ -26,9 +26,13 @@ class ProjectTest extends TestCase
 
         $project = Project::first();
         $team_member = TeamMember::first();
-        $project->staff()->attach($team_member->id, [
+
+        $project ? $project->staff()->attach($team_member['id'] ?? null, [
             'role' => $this->faker->name(),
-        ]);
+        ])
+        :
+        null;
+
 
         $this->assertDatabaseCount('projects', 1);
         $this->assertDatabaseCount('team_members', 1);

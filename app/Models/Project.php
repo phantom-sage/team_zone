@@ -26,7 +26,7 @@ class Project extends Model
      *
      * @return BelongsTo
      */
-    public function owner()
+    public function owner(): BelongsTo
     {
         return $this->belongsTo(Client::class, 'client_id');
     }
@@ -36,7 +36,7 @@ class Project extends Model
      *
      * @return BelongsToMany
      */
-    public function staff()
+    public function staff(): BelongsToMany
     {
         return $this->belongsToMany(TeamMember::class)->withPivot([
             'role',
@@ -50,7 +50,7 @@ class Project extends Model
      *
      * @return HasOne
      */
-    public function manager()
+    public function manager(): HasOne
     {
         return $this->hasOne(TeamMember::class);
     }

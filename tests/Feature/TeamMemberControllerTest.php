@@ -37,7 +37,7 @@ final class TeamMemberControllerTest extends TestCase
         $resp = $this->post(route('team_members.store'), $data);
         $resp->assertOk();
         $this->assertDatabaseCount('team_members', 1);
-        $this->assertSame('project_manager', TeamMember::first()->type);
+        $this->assertSame('project_manager', TeamMember::first()['type'] ?? null);
     }
 
     /**
@@ -58,7 +58,7 @@ final class TeamMemberControllerTest extends TestCase
         $resp = $this->post(route('team_members.store'), $data);
         $resp->assertOk();
         $this->assertDatabaseCount('team_members', 1);
-        $this->assertSame('team_member', TeamMember::first()->type);
+        $this->assertSame('team_member', TeamMember::first()['type'] ?? null);
     }
 
     /**
@@ -71,7 +71,7 @@ final class TeamMemberControllerTest extends TestCase
     {
         TeamMember::factory()->create();
         $this->assertDatabaseCount('team_members', 1);
-        $team_member_id = TeamMember::first()->id;
+        $team_member_id = TeamMember::first()['id'] ?? null;
         $resp = $this->delete(route('team_members.destroy', ['team_member' => $team_member_id]));
         $resp->assertOk();
         $this->assertDatabaseCount('team_members', 0);
@@ -88,9 +88,9 @@ final class TeamMemberControllerTest extends TestCase
         Project::factory()->create();
         TeamMember::factory([
             'type' => 'project_manager',
-            'project_id' => Project::first()->id,
+            'project_id' => Project::first()['id'] ?? null,
         ])->create();
-        $this->assertInstanceOf(Project::class, TeamMember::first()->project);
-        $this->assertInstanceOf(TeamMember::class, Project::first()->manager);
+        $this->assertInstanceOf(Project::class, TeamMember::first()['project'] ?? null);
+        $this->assertInstanceOf(TeamMember::class, Project::first()['manager'] ?? null);
     }
 }
