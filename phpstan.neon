@@ -1,0 +1,66 @@
+includes:
+    - ./vendor/nunomaduro/larastan/extension.neon
+
+parameters:
+
+    paths:
+        - app
+        - tests
+
+    # The level 9 is the highest level
+    level: 9
+
+    excludePaths:
+        - app/Http/Controller/Controller.php
+        - app/Http/Kernel.php
+        - app/Actions
+        - app/Console
+        - app/Exception
+        - app/Http/Middleware
+        - app/Policies
+        - app/Providers
+        - app/Http/Requests
+        - app/Http/Resources
+        - tests/Feature/ApiTokenPermissionsTest.php
+        - tests/Feature/AuthenticationTest.php
+        - tests/Feature/BrowserSessionsTest.php
+        - tests/Feature/CreateApiTokenTest.php
+        - tests/Feature/DeleteAccountTest.php
+        - tests/Feature/DeleteApiTokenTest.php
+        - tests/Feature/EmailVerificationTest.php
+        - tests/Feature/PasswordConfirmationTest.php
+        - tests/Feature/PasswordResetTest.php
+        - tests/Feature/ProfileInformationTest.php
+        - tests/Feature/RegistrationTest.php
+        - tests/Feature/TwoFactorAuthenticationSettingsTest.php
+        - tests/Feature/UpdatePasswordTest.php
+        - bootstrap
+        - config
+        - database
+        - lang
+        - public
+        - node_modules
+        - resources
+        - routes
+        - storage
+        - vendor
+        - .editorconfig
+        - .env
+        - .env.dusk.local
+        - .env.example
+        - .gitattributes
+        - .gitignore
+        - .phpunit.result.cache
+        - .styleci.yml
+        - artisan
+        - composer.json
+        - composer-lock.json
+        - phpstan.neon
+        - phpunit.xml
+        - README.md
+        - tailwind.config.js
+        - webpack.config.js
+        - webpack.mix.js
+
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false

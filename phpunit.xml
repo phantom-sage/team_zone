@@ -11,11 +11,28 @@
         <testsuite name="Feature">
             <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
+        <testsuite name="Api">
+            <directory suffix="Test.php">./tests/Api</directory>
+        </testsuite>
     </testsuites>
     <coverage processUncoveredFiles="true">
         <include>
             <directory suffix=".php">./app</directory>
         </include>
+        <exclude>
+            <directory suffix=".php">./app/Models</directory>
+            <directory suffix=".php">./app/Actions</directory>
+            <directory suffix=".php">./app/Console</directory>
+            <directory suffix=".php">./app/Exceptions</directory>
+            <directory suffix=".php">./app/Models</directory>
+            <directory suffix=".php">./app/Policies</directory>
+            <directory suffix=".php">./app/Providers</directory>
+            <directory suffix=".php">./app/Http/Middleware</directory>
+            <directory suffix=".php">./app/Http/Requests</directory>
+            <directory suffix=".php">./app/Http/Resources</directory>
+            <directory suffix=".php">./app/Http/Kernel.php</directory>
+            <directory suffix=".php">./app/Http/Controllers/Controller.php</directory>
+        </exclude>
     </coverage>
     <php>
         <env name="APP_ENV" value="testing"/>
