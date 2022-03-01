@@ -126,24 +126,26 @@ final class ProjectControllerTest extends TestCase
         ]);
         $project = Project::first() ?? null;
 
-        $resp->assertJson(fn(AssertableJson $json) => $json
-            ->has('data', 11)
-            ->has('data', fn($json) => $json->where('id', 1)
-                ->where('id', $project['id'] ?? null)
-                ->where('name', $project['name'] ?? null)
-                ->where('deadline', $project['deadline'] ?? null)
-                ->where('status', $project['status'] ?? null)
-                ->where('code', $project['code'] ?? null)
-                ->where('created_at', $project->created_at ? $project->created_at->format('Y-m-d h:i:s') : null)
-                ->where('updated_at', $project->updated_at ? $project->updated_at->format('Y-m-d h:i:s') : null)
-                ->where('owner', $project['owner'] ?? null)
-                ->where('staff', $project['staff'] ?? null)
-                ->where('manager', $project['manager'] ?? null)
-                ->where('manager', $project['manager'] ?? null)
-                ->where('tasks', $project['tasks'] ?? null)
-                ->etc()
-            )
-        );
+        if ($project) {
+            $resp->assertJson(fn(AssertableJson $json) => $json
+                ->has('data', 11)
+                ->has('data', fn($json) => $json->where('id', 1)
+                    ->where('id', $project['id'] ?? null)
+                    ->where('name', $project['name'] ?? null)
+                    ->where('deadline', $project['deadline'] ?? null)
+                    ->where('status', $project['status'] ?? null)
+                    ->where('code', $project['code'] ?? null)
+                    ->where('created_at', $project->created_at ? $project->created_at->format('Y-m-d h:i:s') : null)
+                    ->where('updated_at', $project->updated_at ? $project->updated_at->format('Y-m-d h:i:s') : null)
+                    ->where('owner', $project['owner'] ?? null)
+                    ->where('staff', $project['staff'] ?? null)
+                    ->where('manager', $project['manager'] ?? null)
+                    ->where('manager', $project['manager'] ?? null)
+                    ->where('tasks', $project['tasks'] ?? null)
+                    ->etc()
+                )
+            )->assertOk();
+        }
     }
 
     /**
@@ -167,24 +169,26 @@ final class ProjectControllerTest extends TestCase
         ]);
         $project = Project::first() ?? null;
 
-        $resp->assertJson(fn(AssertableJson $json) => $json
-            ->has('data', 11)
-            ->has('data', fn($json) => $json->where('id', 1)
-                ->where('id', $project['id'] ?? null)
-                ->where('name', $project['name'] ?? null)
-                ->where('deadline', $project['deadline'] ?? null)
-                ->where('status', $project['status'] ?? null)
-                ->where('code', $project['code'] ?? null)
-                ->where('created_at', $project->created_at ? $project->created_at->format('Y-m-d h:i:s') : null)
-                ->where('updated_at', $project->updated_at ? $project->updated_at->format('Y-m-d h:i:s') : null)
-                ->where('owner', $project['owner'] ?? null)
-                ->where('staff', $project['staff'] ?? null)
-                ->where('manager', $project['manager'] ?? null)
-                ->where('manager', $project['manager'] ?? null)
-                ->where('tasks', $project['tasks'] ?? null)
-                ->etc()
-            )
-        );
+        if ($project) {
+            $resp->assertJson(fn(AssertableJson $json) => $json
+                ->has('data', 11)
+                ->has('data', fn($json) => $json->where('id', 1)
+                    ->where('id', $project['id'] ?? null)
+                    ->where('name', $project['name'] ?? null)
+                    ->where('deadline', $project['deadline'] ?? null)
+                    ->where('status', $project['status'] ?? null)
+                    ->where('code', $project['code'] ?? null)
+                    ->where('created_at', $project->created_at ? $project->created_at->format('Y-m-d h:i:s') : null)
+                    ->where('updated_at', $project->updated_at ? $project->updated_at->format('Y-m-d h:i:s') : null)
+                    ->where('owner', $project['owner'] ?? null)
+                    ->where('staff', $project['staff'] ?? null)
+                    ->where('manager', $project['manager'] ?? null)
+                    ->where('manager', $project['manager'] ?? null)
+                    ->where('tasks', $project['tasks'] ?? null)
+                    ->etc()
+                )
+            )->assertOk();
+        }
     }
 
     /**

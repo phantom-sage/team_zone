@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ClientResource;
 use App\Http\Resources\ProjectResource;
-use App\Http\Resources\UserResource;
 use App\Models\Client;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
@@ -20,7 +19,7 @@ class LoginController extends Controller
      * login as admin.
      *
      * @param Request $request
-     * @return UserResource|JsonResponse
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function login_as_admin(Request $request)
     {
@@ -32,7 +31,7 @@ class LoginController extends Controller
             $admin = User::where('username', '=', $data['username'])->first();
             if ($admin) {
                 if (Hash::check($data['password'], $admin->password)) {
-                    return new UserResource($admin);
+                    return ProjectResource::collection(Project::all());
                 } else {
                     return response()
                         ->json([
@@ -53,7 +52,7 @@ class LoginController extends Controller
             $admin = User::where('email', '=', $data['email'])->first();
             if ($admin) {
                 if (Hash::check($data['password'], $admin->password)) {
-                    return new UserResource($admin);
+                    return ProjectResource::collection(Project::all());
                 } else {
                     return response()
                         ->json([

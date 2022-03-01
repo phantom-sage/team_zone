@@ -32,7 +32,9 @@ class UserController extends Controller
         if ($projects != null) {
             foreach ($projects as $project) {
                 if ($project != null) {
-                    if ($project->created_at->format('Y-m-d') <= $data['from_date'] && $project->created_at->format('Y-m-d') <= $data['to_date']) {
+                    $p_c = $project->created_at ? $project->created_at->format('Y-m-d') : null;
+                    if ($p_c <= $data['from_date'] && $p_c <= $data['to_date']
+                    ) {
                         $x[] = $project;
                     }
                 }
@@ -86,7 +88,8 @@ class UserController extends Controller
         $projects = Project::all();
         $x = [];
         foreach ($projects as $project) {
-            if ($project->created_at->format('Y-m-d') <= $data['from_date'] && $project->created_at->format('Y-m-d') <= $data['to_date']) {
+            $p_c = $project->created_at ? $project->created_at->format('Y-m-d') : null;
+            if ($p_c <= $data['from_date'] && $p_c <= $data['to_date']) {
                 $x[] = $project;
             }
         }
