@@ -18,6 +18,76 @@ final class ClientControllerTest extends TestCase
         $this->withoutExceptionHandling();
     }
 
+
+    /**
+     * client update route.
+     *
+     * @test
+     * @return void
+     */
+    public function client_update_route(): void
+    {
+        Client::factory()->create();
+        $this->assertDatabaseCount('clients', 1);
+        $client_id = Client::first()['id'] ?? null;
+        $resp = $this->put(route('clients.update', ['client' => $client_id]));
+        $resp->assertOk();
+    }
+
+    /**
+     * client edit route.
+     *
+     * @test
+     * @return void
+     */
+    public function client_edit_route(): void
+    {
+        Client::factory()->create();
+        $this->assertDatabaseCount('clients', 1);
+        $client_id = Client::first()['id'] ?? null;
+        $resp = $this->get(route('clients.edit', ['client' => $client_id]));
+        $resp->assertOk();
+    }
+
+    /**
+     * client show route.
+     *
+     * @test
+     * @return void
+     */
+    public function client_show_route(): void
+    {
+        Client::factory()->create();
+        $this->assertDatabaseCount('clients', 1);
+        $client_id = Client::first()['id'] ?? null;
+        $resp = $this->get(route('clients.show', ['client' => $client_id]));
+        $resp->assertOk();
+    }
+
+    /**
+     * client create route.
+     *
+     * @test
+     * @return void
+     */
+    public function client_create_route(): void
+    {
+        $this->get(route('clients.create'))->assertOk();
+    }
+
+    /**
+     * client index route.
+     *
+     * @test
+     * @return void
+     */
+    public function client_index_route(): void
+    {
+        Client::factory()->create();
+        $this->assertDatabaseCount('clients', 1);
+        $this->get(route('clients.index'))->assertOk();
+    }
+
     /**
      * add client.
      *
@@ -27,10 +97,8 @@ final class ClientControllerTest extends TestCase
     public function add_client(): void
     {
         $data = [
-            'name' => $this->faker->name(),
             'username' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
-            'password' => 'password',
         ];
         $resp = $this->post(route('clients.store'), $data);
         $resp->assertOk();

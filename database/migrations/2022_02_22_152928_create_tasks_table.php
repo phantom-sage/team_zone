@@ -19,6 +19,8 @@ return new class extends Migration
             $table->date('duration');
             $table->string('status');
             $table->text('description');
+            $table->foreignId('project_id')->nullable();
+            $table->foreignId('team_member_id')->nullable();
             $table->timestamps();
         });
     }

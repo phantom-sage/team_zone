@@ -1,9 +1,13 @@
 <?php
 
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\FileController;
+use App\Http\Controllers\HrController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TeamMemberController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -28,14 +32,25 @@ Route::get('/', function () {
     ]);
 });
 
+Route::view('e', 'e');
+
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');
 
+Route::put('projects/{project}/rate', [ProjectController::class, 'client_rate_project_after_end'])
+    ->name('projects.rate');
+
+Route::post('reports', [UserController::class, 'report'])->name('reports.store');
+Route::post('reports/export/pdf', [UserController::class, 'export_report_as_pdf'])->name('reports.export.pdf');
+Route::post('reports/send/email', [UserController::class, 'send_report_as_pdf_to_email'])->name('reports.send.email');
 
 Route::resources([
     'projects' => ProjectController::class,
     'clients' => ClientController::class,
     'team_members' => TeamMemberController::class,
     'tasks' => TaskController::class,
+    'hrs' => HrController::class,
+    'messages' => MessageController::class,
+    'files' => FileController::class,
 ]);

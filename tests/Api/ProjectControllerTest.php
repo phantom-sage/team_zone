@@ -4,6 +4,8 @@
 namespace Tests\Api;
 
 use App\Models\Project;
+use App\Models\Task;
+use App\Models\TeamMember;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
@@ -12,10 +14,96 @@ final class ProjectControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    /**
+     * get client project.
+     *
+     * @test
+     */
+    public function get_client_project(): void
+    {
+
+
+        Project::factory()->count(1)->create();
+        TeamMember::factory()->create();
+        Task::factory([
+            'project_id' => Project::first()['id'] ?? null,
+            'team_member_id' => TeamMember::first()['id'] ?? null,
+        ])->count(5)->create();
+        $this->assertDatabaseCount('projects', 6);
+        $this->assertDatabaseCount('tasks', 5);
+        $this->assertDatabaseCount('team_members', 6);
+
+        $resp = $this->postJson('/api/client/project', [
+            'code' => Project::first()['code'] ?? null,
+        ]);
+        $project = Project::first() ?? null;
+
+        $resp->assertJson(fn(AssertableJson $json) => $json
+            ->has('data', 11)
+            ->has('data', fn($json) => $json->where('id', 1)
+                ->where('id', $project['id'] ?? null)
+                ->where('name', $project['name'] ?? null)
+                ->where('deadline', $project['deadline'] ?? null)
+                ->where('status', $project['status'] ?? null)
+                ->where('code', $project['code'] ?? null)
+                ->where('created_at', $project->created_at ? $project->created_at->format('Y-m-d h:i:s') : null)
+                ->where('updated_at', $project->updated_at ? $project->updated_at->format('Y-m-d h:i:s') : null)
+                ->where('owner', $project['owner'] ?? null)
+                ->where('staff', $project['staff'] ?? null)
+                ->where('manager', $project['manager'] ?? null)
+                ->where('manager', $project['manager'] ?? null)
+                ->where('tasks', $project['tasks'] ?? null)
+                ->etc()
+            )
+        );
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
         $this->withoutExceptionHandling();
+    }
+
+    /**
+     * projects update route.
+     *
+     * @test
+     * @return void
+     */
+    public function projects_update_route(): void
+    {
+        Project::factory()->create();
+        $this->assertDatabaseCount('projects', 1);
+        $project_id = Project::first()['id'] ?? null;
+        $resp = $this->putJson('/api/projects/' . $project_id);
+        $resp->assertOk();
+    }
+
+
+    /**
+     * projects destroy route.
+     *
+     * @test
+     * @return void
+     */
+    public function projects_destroy_route(): void
+    {
+        Project::factory()->create();
+        $this->assertDatabaseCount('projects', 1);
+        $project_id = Project::first()['id'] ?? null;
+        $resp = $this->deleteJson('/api/projects/' . $project_id);
+        $resp->assertOk();
+    }
+
+    /**
+     * project store route.
+     *
+     * @test
+     * @return void
+     */
+    public function project_store_route(): void
+    {
+        $this->post('/api/projects/')->assertOk();
     }
 
     /**

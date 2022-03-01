@@ -26,7 +26,9 @@ class StoreProjectRequest extends FormRequest
         return [
             'name' => ['string', 'required', 'unique:projects'],
             'deadline' => ['required', 'date'],
-            'client_id' => ['required', 'integer'],
+            'client_username' => ['required', 'string', 'min:3', 'max:255'],
+            'client_email' => ['required', 'string', 'email', 'max:255', 'unique:App\Models\Client,email'],
+            'status' => ['required', 'string'],
         ];
     }
 }

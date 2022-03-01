@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class TeamMember extends Model
 {
@@ -41,8 +43,28 @@ class TeamMember extends Model
      *
      * @return BelongsTo
      */
-    public function project()
+    public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
+    }
+
+    /**
+     * messages of user.
+     *
+     * @return MorphToMany
+     */
+    public function messages(): MorphToMany
+    {
+        return $this->morphToMany(Message::class, 'messageable');
+    }
+
+    /**
+     * task team member has.
+     *
+     * @return HasOne
+     */
+    public function task(): HasOne
+    {
+        return $this->hasOne(Task::class);
     }
 }

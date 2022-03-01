@@ -17,6 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->timestamp('deadline');
+            $table->string('code');
+            $table->foreignId('client_id')->nullable();
+            $table->unsignedInteger('rate')->default(0);
+            $table->string('status');
             $table->timestamps();
         });
     }

@@ -2,11 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Events\NewProjectCreated;
 use App\Models\Client;
 use App\Models\Project;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 final class ProjectControllerTest extends TestCase
@@ -21,6 +22,28 @@ final class ProjectControllerTest extends TestCase
     }
 
     /**
+     * rate project after end.
+     *
+     * @test
+     */
+    public function rate_project_after_end(): void
+    {
+        Project::factory()->create();
+        $this->assertDatabaseCount('projects', 1);
+        $data = [
+            'rate' => 123
+        ];
+        $project = Project::first() ?? null;
+        if ($project) {
+            $resp = $this->put(route('projects.rate', ['project' => $project['id']]), $data);
+            $project->refresh();
+            $resp->assertOk();
+            $this->assertSame(123, $project['rate']);
+            $this->assertDatabaseCount('projects', 1);
+        }
+    }
+
+    /**
      * create project.
      *
      * @test
@@ -28,13 +51,16 @@ final class ProjectControllerTest extends TestCase
      */
     public function create_project(): void
     {
-        Client::factory()->create();
+        Event::fake();
         $data = [
             'name' => $this->faker->name(),
             'deadline' => now(),
-            'client_id' => Client::first()['id'] ?? null,
+            'client_username' => $this->faker->name(),
+            'client_email' => 'abdoeltayeb10@gmail.com',
+            'status' => $this->faker->title(),
         ];
         $resp = $this->post(route('projects.store'), $data);
+        Event::assertDispatched(NewProjectCreated::class);
 
         $resp->assertOk();
         $this->assertDatabaseCount('projects', 1);
@@ -68,5 +94,84 @@ final class ProjectControllerTest extends TestCase
         $project = Project::first();
         $this->assertInstanceOf(Client::class, $project['owner'] ?? null);
         $this->assertSame(Client::first()['id'] ?? null, $project['owner']['id'] ?? null);
+    }
+
+
+    /**
+     * projects index route.
+     *
+     * @test
+     * @return void
+     */
+    public function projects_index_route(): void
+    {
+        Project::factory()->count(10)->create();
+        $this->assertDatabaseCount('projects', 10);
+
+        $resp = $this->get(route('projects.index'));
+        $resp->assertOk();
+    }
+
+
+    /**
+     * projects create route.
+     *
+     * @test
+     * @return void
+     */
+    public function projects_create_route(): void
+    {
+        $resp = $this->get(route('projects.create'));
+        $resp->assertOk();
+    }
+
+
+    /**
+     * projects show route.
+     *
+     * @test
+     * @return void
+     */
+    public function projects_show_route(): void
+    {
+        Project::factory()->create();
+        $this->assertDatabaseCount('projects', 1);
+
+        $project_id = Project::first()['id'] ?? null;
+        $resp = $this->get(route('projects.show', ['project' => $project_id]));
+        $resp->assertOk();
+    }
+
+
+    /**
+     * projects edit route.
+     *
+     * @test
+     * @return void
+     */
+    public function projects_edit_route(): void
+    {
+        Project::factory()->create();
+        $this->assertDatabaseCount('projects', 1);
+
+        $project_id = Project::first()['id'] ?? null;
+        $resp = $this->get(route('projects.edit', ['project' => $project_id]));
+        $resp->assertOk();
+    }
+
+    /**
+     * projects update route.
+     *
+     * @test
+     * @return void
+     */
+    public function projects_update_route(): void
+    {
+        Project::factory()->create();
+        $this->assertDatabaseCount('projects', 1);
+
+        $project_id = Project::first()['id'] ?? null;
+        $resp = $this->put(route('projects.update', ['project' => $project_id]));
+        $resp->assertOk();
     }
 }

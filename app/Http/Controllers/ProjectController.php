@@ -2,12 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewProjectCreated;
+use App\Models\Client;
 use App\Models\Project;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
+
+    /**
+     * client rate project after end.
+     * @param Request $request
+     * @param Project $project
+     * @return string
+     */
+    public function client_rate_project_after_end(Request $request, Project $project)
+    {
+        $data = $request->validate([
+            'rate' => ['integer', 'required', 'min:0'],
+        ]);
+        $project->update([
+            'rate' => $data['rate'],
+        ]);
+        return 'rate';
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -32,16 +55,25 @@ class ProjectController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreProjectRequest $request
-     * @return void
+     * @return string
      */
     public function store(StoreProjectRequest $request)
     {
-        $data = $request->safe(['name', 'deadline', 'client_id']);
-        Project::create([
-            'name' => $data['name'],
-            'deadline' => $data['deadline'],
-            'client_id' => $data['client_id'],
-        ]);
+        $data = $request->safe(['name', 'deadline', 'client_username', 'client_email', 'status']);
+        $client = new Client();
+        $client['username'] = $data['client_username'];
+        $client['email'] = $data['client_email'];
+        $client->save();
+// TODO: ADD PROJECT MANAGER
+        $project = new Project();
+        $project['name'] = $data['name'];
+        $project['deadline'] = $data['deadline'];
+        $project['code'] = Str::random(8);
+        $project['client_id'] = $client['id'] ?? null;
+        $project['status'] = $data['status'];
+        $project->save();
+        NewProjectCreated::dispatch($project);
+        return 'store';
     }
 
     /**

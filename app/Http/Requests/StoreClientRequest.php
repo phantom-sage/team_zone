@@ -24,10 +24,8 @@ class StoreClientRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['string', 'required', 'min:3', 'max:255'],
             'username' => ['string', 'required', 'min:3', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:clients'],
-            'password' => ['required', 'string', 'min:8', 'max:255'],
         ];
     }
 }
