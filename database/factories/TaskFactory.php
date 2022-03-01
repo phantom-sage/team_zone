@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Project;
+use App\Models\TeamMember;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,6 +23,8 @@ class TaskFactory extends Factory
             'duration' => $this->faker->date(),
             'status' => 'Completed',
             'description' => $this->faker->sentence(),
+            'project_id' => Project::factory()->create(),
+            'team_member_id' => TeamMember::factory()->create(),
         ];
     }
 }

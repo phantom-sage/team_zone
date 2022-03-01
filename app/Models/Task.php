@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Task extends Model
 {
@@ -18,4 +19,24 @@ class Task extends Model
         'status',
         'description',
     ];
+
+    /**
+     * team member master the task.
+     *
+     * @return BelongsTo
+     */
+    public function master(): BelongsTo
+    {
+        return $this->belongsTo(TeamMember::class, 'team_member_id');
+    }
+
+    /**
+     * project where task belongs to.
+     *
+     * @return BelongsTo
+     */
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(Project::class);
+    }
 }

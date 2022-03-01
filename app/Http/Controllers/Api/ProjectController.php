@@ -10,6 +10,27 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ProjectController extends Controller
 {
+
+    /**
+     * get_client_project.
+     *
+     * @param Request $request
+     * @return ProjectResource|string
+     */
+    public function get_client_project(Request $request)
+    {
+       $data = $request->validate([
+           'code' => ['required', 'string', 'size:8'],
+       ]);
+       $project = Project::where('code', '=', $data['code'])->first();
+
+       if ($project == null) {
+           return abort(404, 'NOT FOUND');
+       }
+
+       return new ProjectResource($project);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -24,11 +45,11 @@ class ProjectController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return void
+     * @return string
      */
     public function store(Request $request)
     {
-        //
+        return 'store';
     }
 
     /**
@@ -47,21 +68,21 @@ class ProjectController extends Controller
      *
      * @param Request $request
      * @param Project $project
-     * @return void
+     * @return string
      */
     public function update(Request $request, Project $project)
     {
-        //
+        return 'update';
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param Project $project
-     * @return void
+     * @return string
      */
     public function destroy(Project $project)
     {
-        //
+        return 'destroy';
     }
 }

@@ -35,17 +35,16 @@ class ClientController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreClientRequest $request
-     * @return void
+     * @return string
      */
     public function store(StoreClientRequest $request)
     {
-        $data = $request->safe(['name', 'username', 'email', 'password']);
-        Client::create([
-            'name' => $data['name'],
-            'username' => $data['username'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        $data = $request->safe(['username', 'email']);
+        $client = new Client();
+        $client['username'] = $data['username'];
+        $client['email'] = $data['email'];
+        $client->save();
+        return 'store';
     }
 
     /**

@@ -20,6 +20,78 @@ final class TeamMemberControllerTest extends TestCase
     }
 
     /**
+     * team members update route.
+     *
+     * @test
+     * @return void
+     */
+    public function team_members_update_route(): void
+    {
+        TeamMember::factory()->create();
+        $this->assertDatabaseCount('team_members', 1);
+        $team_member_id = TeamMember::first()['id'] ?? null;
+        $resp = $this->put(route('team_members.update', ['team_member'  => $team_member_id]));
+        $resp->assertOk();
+    }
+
+    /**
+     * team members edit route.
+     *
+     * @test
+     * @return void
+     */
+    public function team_members_edit_route(): void
+    {
+        TeamMember::factory()->create();
+        $this->assertDatabaseCount('team_members', 1);
+        $team_member_id = TeamMember::first()['id'] ?? null;
+        $resp = $this->get(route('team_members.edit', ['team_member'  => $team_member_id]));
+        $resp->assertOk();
+    }
+
+    /**
+     * team members show route.
+     *
+     * @test
+     * @return void
+     */
+    public function team_members_show_route(): void
+    {
+        TeamMember::factory()->create();
+        $this->assertDatabaseCount('team_members', 1);
+        $team_member_id = TeamMember::first()['id'] ?? null;
+        $resp = $this->get(route('team_members.show', ['team_member'  => $team_member_id]));
+        $resp->assertOk();
+    }
+
+
+    /**
+     * team members create route.
+     *
+     * @test
+     * @return void
+     */
+    public function team_members_create_route(): void
+    {
+        $this->get(route('team_members.create'))->assertOk();
+    }
+
+    /**
+     * team member index route.
+     *
+     * @test
+     * @return void
+     */
+    public function team_member_index_route(): void
+    {
+        TeamMember::factory()->count(10)->create();
+        $this->assertDatabaseCount('team_members', 10);
+
+        $resp = $this->get(route('team_members.index'));
+        $resp->assertOk();
+    }
+
+    /**
      * add team member as project manager.
      *
      * @test

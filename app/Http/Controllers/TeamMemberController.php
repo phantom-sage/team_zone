@@ -13,21 +13,21 @@ class TeamMemberController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return void
+     * @return string
      */
     public function index()
     {
-        //
+        return 'index';
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return void
+     * @return string
      */
     public function create()
     {
-        //
+        return 'create';
     }
 
     /**
@@ -52,34 +52,34 @@ class TeamMemberController extends Controller
      * Display the specified resource.
      *
      * @param TeamMember $teamMember
-     * @return void
+     * @return string
      */
     public function show(TeamMember $teamMember)
     {
-        //
+        return 'show';
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param TeamMember $teamMember
-     * @return void
+     * @return string
      */
     public function edit(TeamMember $teamMember)
     {
-        //
+        return 'edit';
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateTeamMemberRequest  $request
+     * @param UpdateTeamMemberRequest $request
      * @param TeamMember $teamMember
-     * @return void
+     * @return string
      */
     public function update(UpdateTeamMemberRequest $request, TeamMember $teamMember)
     {
-        //
+        return 'update';
     }
 
     /**

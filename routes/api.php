@@ -23,4 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/users/admin/login', [LoginController::class, 'login_as_admin']);
 Route::post('/users/client/login', [LoginController::class, 'login_as_client']);
 
+Route::post('/client/project', [ProjectController::class, 'get_client_project']);
+
 Route::apiResource('projects', ProjectController::class);

@@ -18,12 +18,14 @@ class ProjectResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'deadline' => $this->deadline,
-            'client_id' => $this->client_id,
+            'code' => $this->code,
+            'status' => $this->status,
             'created_at' => $this->created_at->format('Y-m-d h:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d h:i:s'),
             'owner' => $this->owner,
             'staff' => $this->staff,
             'manager' => $this->manager,
+            'tasks' => $this->tasks,
         ];
     }
 }

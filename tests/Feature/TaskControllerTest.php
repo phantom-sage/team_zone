@@ -54,8 +54,56 @@ final class TaskControllerTest extends TestCase
     public function tasks_show_route(): void
     {
         Task::factory()->create();
+        $this->assertDatabaseCount('tasks', 1);
         $task_id = Task::first()['id'] ?? null;
         $resp = $this->get(route('tasks.show', ['task' => $task_id]));
+        $resp->assertOk();
+    }
+
+
+    /**
+     * tasks update route.
+     *
+     * @test
+     * @return void
+     */
+    public function tasks_update_route(): void
+    {
+        Task::factory()->create();
+        $this->assertDatabaseCount('tasks', 1);
+        $task_id = Task::first()['id'] ?? null;
+        $resp = $this->put(route('tasks.update', ['task' => $task_id]));
+        $resp->assertOk();
+    }
+
+
+    /**
+     * tasks destroy route.
+     *
+     * @test
+     * @return void
+     */
+    public function tasks_destroy_route(): void
+    {
+        Task::factory()->create();
+        $this->assertDatabaseCount('tasks', 1);
+        $task_id = Task::first()['id'] ?? null;
+        $resp = $this->delete(route('tasks.show', ['task' => $task_id]));
+        $resp->assertOk();
+    }
+
+    /**
+     * tasks edit route.
+     *
+     * @test
+     * @return void
+     */
+    public function tasks_edit_route(): void
+    {
+        Task::factory()->create();
+        $this->assertDatabaseCount('tasks', 1);
+        $task_id = Task::first()['id'] ?? null;
+        $resp = $this->get(route('tasks.edit', ['task' => $task_id]));
         $resp->assertOk();
     }
 

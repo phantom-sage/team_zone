@@ -16,11 +16,11 @@ class ClientResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
             'username' => $this->username,
             'email' => $this->email,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'projects' => $this->projects,
+            'created_at' => $this->created_at->format('Y-m-d h:i:s'),
+            'updated_at' => $this->updated_at->format('Y-m-d h:i:s'),
         ];
     }
 }
