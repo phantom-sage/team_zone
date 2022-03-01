@@ -17,34 +17,10 @@ final class LoginTest extends TestCase
     use RefreshDatabase;
     use WithFaker;
 
-    /**
-     * @var string[][]
-     */
-    private array $admin_json_data_structure;
-
-    /**
-     * @var array
-     */
-    private array $not_found_json_data_structure;
-
     protected function setUp(): void
     {
         parent::setUp();
         $this->withoutExceptionHandling();
-        $this->admin_json_data_structure = [
-            'data' => [
-                'id',
-                'name',
-                'username',
-                'email',
-                'created_at',
-                'updated_at',
-            ],
-        ];
-        $this->not_found_json_data_structure = [
-            'message',
-        ];
-
     }
 
     /**
@@ -55,6 +31,8 @@ final class LoginTest extends TestCase
      */
     public function login_as_admin_with_username_password(): void
     {
+        Project::factory()->count(5)->create();
+        $project = Project::first() ?? null;
         User::factory([
             'username' => 'username',
         ])->create();
@@ -63,7 +41,26 @@ final class LoginTest extends TestCase
             'password' => 'password',
         ];
         $resp = $this->post('/api/users/admin/login', $data);
-        $resp->assertJsonStructure($this->admin_json_data_structure)->assertOk();
+        if ($project) {
+            $resp->assertJson(fn(AssertableJson $json) => $json
+                ->has('data', 5)
+                ->has('data.0', fn($json) => $json->where('id', 1)
+                    ->where('id', $project['id'] ?? null)
+                    ->where('name', $project['name'] ?? null)
+                    ->where('deadline', $project['deadline'] ?? null)
+                    ->where('status', $project['status'] ?? null)
+                    ->where('code', $project['code'] ?? null)
+                    ->where('created_at', $project->created_at ? $project->created_at->format('Y-m-d h:i:s') : null)
+                    ->where('updated_at', $project->updated_at ? $project->updated_at->format('Y-m-d h:i:s') : null)
+                    ->where('owner', $project['owner'] ?? null)
+                    ->where('staff', $project['staff'] ?? null)
+                    ->where('manager', $project['manager'] ?? null)
+                    ->where('manager', $project['manager'] ?? null)
+                    ->where('tasks', $project['tasks'] ?? null)
+                    ->etc()
+                )
+            )->assertOk();
+        }
     }
 
     /**
@@ -80,7 +77,7 @@ final class LoginTest extends TestCase
             'password' => 'password',
         ];
         $resp = $this->post('/api/users/admin/login', $data);
-        $resp->assertJsonStructure($this->not_found_json_data_structure)->assertNotFound();
+        $resp->assertJson(fn(AssertableJson $json) => $json->where('message', 'NOT FOUND'))->assertNotFound();
     }
 
     /**
@@ -97,7 +94,7 @@ final class LoginTest extends TestCase
             'password' => 'passwords',
         ];
         $resp = $this->post('/api/users/admin/login', $data);
-        $resp->assertJsonStructure($this->not_found_json_data_structure)->assertNotFound();
+        $resp->assertJson(fn(AssertableJson $json) => $json->where('message', 'NOT FOUND'))->assertNotFound();
     }
 
     /**
@@ -109,12 +106,33 @@ final class LoginTest extends TestCase
     public function login_as_admin_with_email(): void
     {
         User::factory()->create();
+        Project::factory()->count(5)->create();
+        $project = Project::first() ?? null;
         $data = [
             'email' => User::first()['email'] ?? null,
             'password' => 'password',
         ];
         $resp = $this->post('/api/users/admin/login', $data);
-        $resp->assertJsonStructure($this->admin_json_data_structure)->assertOk();
+        if ($project) {
+            $resp->assertJson(fn(AssertableJson $json) => $json
+                ->has('data', 5)
+                ->has('data.0', fn($json) => $json->where('id', 1)
+                    ->where('id', $project['id'] ?? null)
+                    ->where('name', $project['name'] ?? null)
+                    ->where('deadline', $project['deadline'] ?? null)
+                    ->where('status', $project['status'] ?? null)
+                    ->where('code', $project['code'] ?? null)
+                    ->where('created_at', $project->created_at ? $project->created_at->format('Y-m-d h:i:s') : null)
+                    ->where('updated_at', $project->updated_at ? $project->updated_at->format('Y-m-d h:i:s') : null)
+                    ->where('owner', $project['owner'] ?? null)
+                    ->where('staff', $project['staff'] ?? null)
+                    ->where('manager', $project['manager'] ?? null)
+                    ->where('manager', $project['manager'] ?? null)
+                    ->where('tasks', $project['tasks'] ?? null)
+                    ->etc()
+                )
+            )->assertOk();
+        }
     }
 
     /**
@@ -131,7 +149,7 @@ final class LoginTest extends TestCase
             'password' => 'password',
         ];
         $resp = $this->post('/api/users/admin/login', $data);
-        $resp->assertJsonStructure($this->not_found_json_data_structure)->assertNotFound();
+        $resp->assertJson(fn(AssertableJson $json) => $json->where('message', 'NOT FOUND'))->assertNotFound();
     }
 
     /**
@@ -148,7 +166,7 @@ final class LoginTest extends TestCase
             'password' => 'passwords',
         ];
         $resp = $this->post('/api/users/admin/login', $data);
-        $resp->assertJsonStructure($this->not_found_json_data_structure)->assertNotFound();
+        $resp->assertJson(fn(AssertableJson $json) => $json->where('message', 'NOT FOUND'))->assertNotFound();
     }
 
     /**
@@ -165,7 +183,7 @@ final class LoginTest extends TestCase
         ];
         foreach ($endpoints as $endpoint) {
             $resp = $this->post($endpoint);
-            $resp->assertJsonStructure($this->not_found_json_data_structure)->assertNotFound();
+            $resp->assertJson(fn(AssertableJson $json) => $json->where('message', 'NOT FOUND'))->assertNotFound();
         }
     }
 
@@ -306,7 +324,6 @@ final class LoginTest extends TestCase
             $resp->assertOk()->assertJson(fn(AssertableJson $json) => $json->where('data.id', $project['id'] ?? null)
                 ->where('data.name', $project['name'] ?? null)
                 ->where('data.deadline', $project['deadline'] ?? null)
-                ->where('data.client_id', $project['client_id'] ?? null)
                 ->where('data.code', $project['code'] ?? null)
                 ->where('data.owner', $project['owner'] ?? null)
                 ->where('data.staff', $project['staff'] ?? null)
@@ -339,7 +356,6 @@ final class LoginTest extends TestCase
             $resp->assertOk()->assertJson(fn(AssertableJson $json) => $json->where('data.id', $project['id'] ?? null)
                 ->where('data.name', $project['name'] ?? null)
                 ->where('data.deadline', $project['deadline'] ?? null)
-                ->where('data.client_id', $project['client_id'] ?? null)
                 ->where('data.code', $project['code'] ?? null)
                 ->where('data.owner', $project['owner'] ?? null)
                 ->where('data.staff', $project['staff'] ?? null)
