@@ -3,10 +3,12 @@
 
 namespace Tests\Api;
 
+use App\Models\Client;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\TeamMember;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
@@ -14,26 +16,112 @@ final class ProjectControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->withoutExceptionHandling();
+    }
+
     /**
-     * get client project.
+     * get client not found.
      *
      * @test
+     * @covers \App\Http\Controllers\Api\ProjectController::get_client_project
      */
-    public function get_client_project(): void
+    public function get_client_not_found(): void
     {
+        $this->withExceptionHandling();
+        $resp = $this->postJson('/api/client/project', []);
+        $resp->assertNotFound();
+    }
 
+    /**
+     * get client project client email and invalid project code.
+     *
+     * @test
+     * @covers \App\Http\Controllers\Api\ProjectController::get_client_project
+     */
+    public function get_client_project_client_email_and_invalid_project_code(): void
+    {
+        $this->withExceptionHandling();
+        Client::factory()->create();
 
+        $resp = $this->postJson('/api/client/project', [
+            'email' => Client::first()['email'] ?? null,
+            'code' => Str::random(8),
+        ]);
+        $resp->assertNotFound();
+    }
+
+    /**
+     * get client project client username and invalid project code.
+     *
+     * @test
+     * @covers \App\Http\Controllers\Api\ProjectController::get_client_project
+     */
+    public function get_client_project_client_username_and_invalid_project_code(): void
+    {
+        $this->withExceptionHandling();
+
+        Client::factory()->create();
+
+        $resp = $this->postJson('/api/client/project', [
+            'username' => Client::first()['username'] ?? null,
+            'code' => Str::random(8),
+        ]);
+        $resp->assertNotFound();
+    }
+
+    /**
+     * get client project client not found username and project code.
+     *
+     * @test
+     * @covers \App\Http\Controllers\Api\ProjectController::get_client_project
+     */
+    public function get_client_project_client_not_found_username_and_project_code(): void
+    {
+        $this->withExceptionHandling();
+        $resp = $this->postJson('/api/client/project', [
+            'username' => Str::random(8),
+            'code' => Str::random(8),
+        ]);
+        $resp->assertNotFound();
+    }
+
+    /**
+     * get client project client not found email and project code.
+     *
+     * @test
+     * @covers \App\Http\Controllers\Api\ProjectController::get_client_project
+     */
+    public function get_client_project_client_not_found_email_and_project_code(): void
+    {
+        $this->withExceptionHandling();
+        $resp = $this->postJson('/api/client/project', [
+            'email' => 'not@found.com',
+            'code' => Str::random(8),
+        ]);
+        $resp->assertNotFound();
+    }
+
+    /**
+     * get client project client email and project code.
+     *
+     * @covers \App\Http\Controllers\Api\ProjectController::get_client_project
+     * @test
+     */
+    public function get_client_project_client_email_and_project_code(): void
+    {
+        Client::factory()->create();
         Project::factory()->count(1)->create();
         TeamMember::factory()->create();
         Task::factory([
             'project_id' => Project::first()['id'] ?? null,
             'team_member_id' => TeamMember::first()['id'] ?? null,
         ])->count(5)->create();
-        $this->assertDatabaseCount('projects', 6);
-        $this->assertDatabaseCount('tasks', 5);
-        $this->assertDatabaseCount('team_members', 6);
 
         $resp = $this->postJson('/api/client/project', [
+            'email' => Client::first()['email'] ?? null,
             'code' => Project::first()['code'] ?? null,
         ]);
         $project = Project::first() ?? null;
@@ -58,10 +146,45 @@ final class ProjectControllerTest extends TestCase
         );
     }
 
-    protected function setUp(): void
+    /**
+     * get client project.
+     *
+     * @test
+     */
+    public function get_client_project_client_username_and_project_code(): void
     {
-        parent::setUp();
-        $this->withoutExceptionHandling();
+        Client::factory()->create();
+        Project::factory()->count(1)->create();
+        TeamMember::factory()->create();
+        Task::factory([
+            'project_id' => Project::first()['id'] ?? null,
+            'team_member_id' => TeamMember::first()['id'] ?? null,
+        ])->count(5)->create();
+
+        $resp = $this->postJson('/api/client/project', [
+            'username' => Client::first()['username'] ?? null,
+            'code' => Project::first()['code'] ?? null,
+        ]);
+        $project = Project::first() ?? null;
+
+        $resp->assertJson(fn(AssertableJson $json) => $json
+            ->has('data', 11)
+            ->has('data', fn($json) => $json->where('id', 1)
+                ->where('id', $project['id'] ?? null)
+                ->where('name', $project['name'] ?? null)
+                ->where('deadline', $project['deadline'] ?? null)
+                ->where('status', $project['status'] ?? null)
+                ->where('code', $project['code'] ?? null)
+                ->where('created_at', $project->created_at ? $project->created_at->format('Y-m-d h:i:s') : null)
+                ->where('updated_at', $project->updated_at ? $project->updated_at->format('Y-m-d h:i:s') : null)
+                ->where('owner', $project['owner'] ?? null)
+                ->where('staff', $project['staff'] ?? null)
+                ->where('manager', $project['manager'] ?? null)
+                ->where('manager', $project['manager'] ?? null)
+                ->where('tasks', $project['tasks'] ?? null)
+                ->etc()
+            )
+        );
     }
 
     /**
@@ -124,7 +247,6 @@ final class ProjectControllerTest extends TestCase
                     ->where('id', $project['id'] ?? null)
                     ->where('name', $project['name'] ?? null)
                     ->where('deadline', $project['deadline'] ?? null)
-                    ->where('client_id', $project['client_id'] ?? null)
                     ->where('created_at', $project->created_at ? $project->created_at->format('Y-m-d h:i:s') : null)
                     ->where('updated_at', $project->updated_at ? $project->updated_at->format('Y-m-d h:i:s') : null)
                     ->where('owner', $project['owner'] ?? null)
@@ -155,7 +277,6 @@ final class ProjectControllerTest extends TestCase
             $resp->assertJson(fn(AssertableJson $json) => $json->where('data.id', $project['id'] ?? null)
                 ->where('data.name', $project['name'] ?? null)
                 ->where('data.deadline', $project['deadline'] ?? null)
-                ->where('data.client_id', $project['client_id'] ?? null)
                 ->where('data.created_at', $project->created_at ? $project->created_at->format('Y-m-d h:i:s') : null)
                 ->where('data.updated_at', $project->updated_at ? $project->updated_at->format('Y-m-d h:i:s') : null)
                 ->where('data.owner', $project['owner'] ?? null)
