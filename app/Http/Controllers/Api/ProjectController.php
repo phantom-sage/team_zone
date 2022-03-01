@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProjectResource;
+use App\Models\Client;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -19,16 +20,41 @@ class ProjectController extends Controller
      */
     public function get_client_project(Request $request)
     {
-       $data = $request->validate([
-           'code' => ['required', 'string', 'size:8'],
-       ]);
-       $project = Project::where('code', '=', $data['code'])->first();
+        if ($request->has('username')) {
+            $data = $request->validate([
+                'username' => ['required', 'string', 'max:255', 'min:3'],
+                'code' => ['required', 'string', 'size:8'],
+            ]);
+            if (Client::where('username', '=', $data['username'])->first() == null) {
+                return abort(404, 'NOT FOUND');
+            }
 
-       if ($project == null) {
-           return abort(404, 'NOT FOUND');
-       }
+            $project = Project::where('code', '=', $data['code'])->first();
 
-       return new ProjectResource($project);
+            if ($project == null) {
+                return abort(404, 'NOT FOUND');
+            }
+
+            return new ProjectResource($project);
+        } elseif ($request->has('email')) {
+            $data = $request->validate([
+                'email' => ['required', 'string', 'email'],
+                'code' => ['required', 'string', 'size:8'],
+            ]);
+
+            if (Client::where('email', '=', $data['email'])->first() == null) {
+                return abort(404, 'NOT FOUND');
+            }
+
+            $project = Project::where('code', '=', $data['code'])->first();
+
+            if ($project == null) {
+                return abort(404, 'NOT FOUND');
+            }
+
+            return new ProjectResource($project);
+        }
+        return abort(404, 'NOT FOUND');
     }
 
     /**
