@@ -8,9 +8,12 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TeamMemberController;
 use App\Http\Controllers\UserController;
+use App\Models\Message;
 use App\Models\Project;
+use App\Models\Task;
 use App\Models\TeamMember;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -35,32 +38,18 @@ Route::get('/', function () {
 });
 
 Route::get('reports', function () {
-    $project_names = [];
-    $project_owners = [];
-    $project_managers = [];
-    $project_status = [];
-    foreach (Project::where('id', '=', 1)->get() as $p) {
-        $project_names [] = $p->name;
-        $project_owners [] = $p->owner->username;
-        $project_managers[] = $p->manager->name;
-        $project_status[] = $p->status;
-    }
-    /*
-     *
-     *
-     * $book = Books::where('id',$request->id)->with('locations')->firstOrFail();
-        return Inertia::render('Admin/Books/Edit', ['book' => $book->load('locations')]);
-     *
-     */
-    $p = Project::where('id', '>', 0)->with(['manager', 'owner'])->get();
     return Inertia::render('Report', [
-        'projects' => $p->load(['manager', 'owner']),
+        'projects' => Project::all()->load(['manager', 'owner']),
     ]);
 })->name('admin.report.page');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard', [
-        'projectManagers' => TeamMember::all(),
+        'projectManagers' => TeamMember::where('type', '=', 'project_manager')->get(),
+        'projects' => Project::all()->load(['manager', 'owner']),
+        'logged_in_name' => Auth::user()->name ?? '',
+        'tasks_count' => Task::count() ?? 0,
+        'enquiries_count' => Message::count() ?? 0,
     ]);
 })->name('dashboard');
 

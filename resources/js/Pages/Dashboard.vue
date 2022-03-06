@@ -20,7 +20,7 @@
             <!-- breadcrumb end -->
 
             <div class="lg:flex justify-between items-center mb-6">
-                <p class="text-2xl font-semibold mb-2 lg:mb-0">Hello, Ajabain!</p>
+                <p class="text-2xl font-semibold mb-2 lg:mb-0">Hello, {{ logged_in_name }}</p>
                 <button
                     class="basis-1/4 bg-blue-500 hover:bg-blue-600 focus:outline-none rounded-lg px-6 py-2 text-white font-semibold shadow"
                     type="button" v-on:click="toggleHrModel()">
@@ -62,22 +62,25 @@
                                                     <input type="text" v-model="hrForm.name" name="name" id="hrname"
                                                            autocomplete="given-name"
                                                            class="mt-1 h-8 focus:outline-none block w-full shadow-sm sm:text-sm border-solid border-2 border-gray-300 rounded-md">
+                                                    <span class="text-red-600 font-weight-bold" v-if="hrForm.errors.name">{{ hrForm.errors.name }}</span>
                                                 </div>
 
                                                 <div class="col-span-6 sm:col-span-4">
-                                                    <label for="hremail"
+                                                    <label for="hrUsername"
                                                            class="block text-sm font-medium text-gray-700">E-mail</label>
-                                                    <input type="text" v-model="hrForm.username" name="username" id="hremail"
+                                                    <input type="text" v-model="hrForm.username" name="username" id="hrUsername"
                                                            autocomplete="given-name"
                                                            class="mt-1 h-8 focus:outline-none block w-full shadow-sm sm:text-sm border-solid border-2 border-gray-300 rounded-md">
+                                                    <span class="text-red-600 font-weight-bold" v-if="hrForm.errors.username">{{ hrForm.errors.username }}</span>
                                                 </div>
 
                                                 <div class="col-span-6 sm:col-span-4">
-                                                    <label for="hrpassword"
+                                                    <label for="hrEmail"
                                                            class="block text-sm font-medium text-gray-700">Password</label>
-                                                    <input type="email" v-model="hrForm.email" name="email" id="hrpassword"
+                                                    <input type="email" v-model="hrForm.email" name="email" id="hrEmail"
                                                            autocomplete="given-name"
                                                            class="mt-1 h-8 focus:outline-none block w-full shadow-sm sm:text-sm border-solid border-2 border-gray-300 rounded-md">
+                                                    <span class="text-red-600 font-weight-bold" v-if="hrForm.errors.email">{{ hrForm.errors.email }}</span>
                                                 </div>
 
                                                 <div class="col-span-6 sm:col-span-4">
@@ -87,6 +90,7 @@
                                                     <input type="password" v-model="hrForm.password" name="password" id="hrpassword"
                                                            autocomplete="given-name"
                                                            class="mt-1 h-8 focus:outline-none block w-full shadow-sm sm:text-sm border-solid border-2 border-gray-300 rounded-md">
+                                                    <span class="text-red-600 font-weight-bold" v-if="hrForm.errors.password">{{ hrForm.errors.password }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -125,7 +129,7 @@
                         </svg>
 
                         <div class="text-gray-700">
-                            <p class="font-semibold text-3xl">10</p>
+                            <p class="font-semibold text-3xl">{{ projects.length }}</p>
                             <p>Projects</p>
                         </div>
 
@@ -141,7 +145,7 @@
                         </svg>
 
                         <div class="text-gray-700">
-                            <p class="font-semibold text-3xl">177</p>
+                            <p class="font-semibold text-3xl">{{ tasks_count }}</p>
                             <p>Tasks</p>
                         </div>
                     </div>
@@ -155,7 +159,7 @@
                         </svg>
 
                         <div class="text-gray-700">
-                            <p class="font-semibold text-3xl">31</p>
+                            <p class="font-semibold text-3xl">{{ enquiries_count }}</p>
                             <p>New Enquiries</p>
                         </div>
                     </div>
@@ -214,7 +218,6 @@
                                 <!--body-->
                                 <div class="mt-5 md:mt-0 md:col-span-2">
                                     <form @submit.prevent="" method="POST">
-                                        {{projectForm?.errors}}
                                         <div class="shadow overflow-hidden sm:rounded-md">
                                             <div class="px-4 py-5 bg-white sm:p-6">
                                                 <div class="grid grid-cols-4 gap-4 ">
@@ -222,9 +225,10 @@
                                                         <label for="project-name"
                                                                class="block text-sm font-medium text-gray-700">Project
                                                             Name</label>
-                                                        <input type="text" name="project_name" id="project-name" v-model="projectForm.name"
+                                                        <input type="text" name="name" id="project-name" v-model="projectForm.name"
                                                                autocomplete="given-name"
                                                                class="mt-1 h-8 focus:outline-none block w-full shadow-sm sm:text-sm border-solid border-2 border-gray-300 rounded-md">
+                                                        <span class="text-red-600 font-weight-bold" v-if="projectForm.errors.name">{{ projectForm.errors.name }}</span>
                                                     </div>
 
                                                     <div class="col-span-6 sm:col-span-4">
@@ -234,6 +238,7 @@
                                                         <input type="text" name="client_username" id="client_username" v-model="projectForm.client_username"
                                                                autocomplete="given-name"
                                                                class="mt-1 h-8 focus:outline-none block w-full shadow-sm sm:text-sm border-solid border-2 border-gray-300 rounded-md">
+                                                        <span class="text-red-600 font-weight-bold" v-if="projectForm.errors.client_username">{{ projectForm.errors.client_username }}</span>
                                                     </div>
 
                                                     <div class="col-span-6 sm:col-span-4">
@@ -242,6 +247,7 @@
                                                         <input type="text" name="status" id="client-name" v-model="projectForm.status"
                                                                autocomplete="given-name"
                                                                class="mt-1 h-8 focus:outline-none block w-full shadow-sm sm:text-sm border-solid border-2 border-gray-300 rounded-md">
+                                                        <span class="text-red-600 font-weight-bold" v-if="projectForm.errors.status">{{ projectForm.errors.status }}</span>
                                                     </div>
 
                                                     <div class="col-span-6 sm:col-span-4">
@@ -251,6 +257,7 @@
                                                         <input type="email" name="client_email" id="client_email" v-model="projectForm.client_email"
                                                                autocomplete="given-name"
                                                                class="mt-1 h-8 focus:outline-none block w-full shadow-sm sm:text-sm border-solid border-2 border-gray-300 rounded-md">
+                                                        <span class="text-red-600 font-weight-bold" v-if="projectForm.errors.client_email">{{ projectForm.errors.client_email }}</span>
                                                     </div>
 
                                                     <div class="col-span-6 sm:col-span-4">
@@ -264,6 +271,7 @@
                                                                 {{ projectManager.name }}
                                                             </option>
                                                         </select>
+                                                        <span class="text-red-600 font-weight-bold" v-if="projectForm.errors.project_manager_id">{{ projectForm.errors.project_manager_id }}</span>
                                                     </div>
                                                     <div class="col-span-6 sm:col-span-4">
                                                         <label for="client-email"
@@ -272,6 +280,7 @@
                                                         <input type="date" name="deadline" id="client-email" v-model="projectForm.deadline"
                                                                autocomplete="given-name"
                                                                class="mt-1 h-8 focus:outline-none block w-full shadow-sm sm:text-sm border-solid border-2 border-gray-300 rounded-md">
+                                                        <span class="text-red-600 font-weight-bold" v-if="projectForm.errors.deadline">{{ projectForm.errors.deadline }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -325,22 +334,21 @@
                             </thead>
                             <!-- Table body -->
                             <tbody class="font-medium divide-y divide-gray-100 text-gray-600 text-sm">
-                            <!-- Row1 -->
-                            <tr class="border-b border-gray-200 hover:bg-gray-200">
+                            <tr v-for="project in projects" :key="project.id" class="border-b border-gray-200 hover:bg-gray-200">
                                 <td class="p-2">
                                     <div class="flex">
-                                        <div class="text-gray-800 py-3 text-left whitespace-nowrap">Team Zone</div>
+                                        <div class="text-gray-800 py-3 text-left whitespace-nowrap">{{ project.name }}</div>
                                     </div>
                                 </td>
                                 <td class="p-2">
-                                    <div class="text-center">Mohamed Ali</div>
+                                    <div class="text-center">{{ project?.owner?.username }}</div>
                                 </td>
                                 <td class="p-2">
-                                    <div class="text-center">Omer Ahmed</div>
+                                    <div class="text-center">{{ project?.manager?.name }}</div>
                                 </td>
                                 <td class="p-2">
                                     <div class="text-center">
-                                        <span class="bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs">Active</span>
+                                        <span class="bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs">{{ project.status }}</span>
                                     </div>
                                 </td>
                                 <td class="py-3 px-6 text-center">
@@ -374,158 +382,6 @@
                                     </div>
                                 </td>
                             </tr>
-                            <!--End of Row1 -->
-                            <!-- Row2 -->
-                            <tr class="border-b border-gray-200 hover:bg-gray-200">
-                                <td class="p-2">
-                                    <div class="flex">
-                                        <div class="text-gray-800 py-3 text-left whitespace-nowrap">Team Zone</div>
-                                    </div>
-                                </td>
-                                <td class="p-2">
-                                    <div class="text-center">Mohamed Ali</div>
-                                </td>
-                                <td class="p-2">
-                                    <div class="text-center">Omer Ahmed</div>
-                                </td>
-                                <td class="p-2">
-                                    <div class="text-center">
-                                        <span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">Completed</span>
-                                    </div>
-                                </td>
-                                <td class="py-3 px-6 text-center">
-                                    <div class="flex item-center justify-center">
-                                        <div
-                                            class="w-4 mr-2 transform hover:text-green-500 hover:scale-110 cursor-pointer">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                 stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                            </svg>
-                                        </div>
-                                        <div
-                                            class="w-4 mr-2 transform hover:text-yellow-500 hover:scale-110 cursor-pointer">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                 stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                      d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                                            </svg>
-                                        </div>
-                                        <div
-                                            class="w-4 mr-2 transform hover:text-red-500 hover:scale-110 cursor-pointer">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                 stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <!--End of Row2 -->
-                            <!-- Row3 -->
-                            <tr class="border-b border-gray-200 hover:bg-gray-200">
-                                <td class="p-2">
-                                    <div class="flex">
-                                        <div class="text-gray-800 py-3 text-left whitespace-nowrap">Team Zone</div>
-                                    </div>
-                                </td>
-                                <td class="p-2">
-                                    <div class="text-center">Mohamed Ali</div>
-                                </td>
-                                <td class="p-2">
-                                    <div class="text-center">Omer Ahmed</div>
-                                </td>
-                                <td class="p-2">
-                                    <div class="text-center">
-                                        <span class="bg-yellow-200 text-yellow-600 py-1 px-3 rounded-full text-xs">Scheduled</span>
-                                    </div>
-                                </td>
-                                <td class="py-3 px-6 text-center">
-                                    <div class="flex item-center justify-center">
-                                        <div
-                                            class="w-4 mr-2 transform hover:text-green-500 hover:scale-110 cursor-pointer">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                 stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                            </svg>
-                                        </div>
-                                        <div
-                                            class="w-4 mr-2 transform hover:text-yellow-500 hover:scale-110 cursor-pointer">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                 stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                      d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                                            </svg>
-                                        </div>
-                                        <div
-                                            class="w-4 mr-2 transform hover:text-red-500 hover:scale-110 cursor-pointer">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                 stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <!--End of Row3 -->
-                            <!-- Row4 -->
-                            <tr class="border-b border-gray-200 hover:bg-gray-200">
-                                <td class="p-2">
-                                    <div class="flex">
-                                        <div class="text-gray-800 py-3 text-left whitespace-nowrap">Team Zone</div>
-                                    </div>
-                                </td>
-                                <td class="p-2">
-                                    <div class="text-center">Mohamed Ali</div>
-                                </td>
-                                <td class="p-2">
-                                    <div class="text-center">Omer Ahmed</div>
-                                </td>
-                                <td class="p-2">
-                                    <div class="text-center">
-                                        <span
-                                            class="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs">Pending</span>
-                                    </div>
-                                </td>
-                                <td class="py-3 px-6 text-center">
-                                    <div class="flex item-center justify-center">
-                                        <div
-                                            class="w-4 mr-2 transform hover:text-green-500 hover:scale-110 cursor-pointer">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                 stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                            </svg>
-                                        </div>
-                                        <div
-                                            class="w-4 mr-2 transform hover:text-yellow-500 hover:scale-110 cursor-pointer">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                 stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                      d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                                            </svg>
-                                        </div>
-                                        <div
-                                            class="w-4 mr-2 transform hover:text-red-500 hover:scale-110 cursor-pointer">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                 stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <!--End of Row4 -->
                             </tbody>
                         </table>
                     </div>
@@ -562,42 +418,22 @@
                             </thead>
                             <!-- Table body -->
                             <tbody class="font-medium divide-y divide-gray-100 text-gray-600 text-sm">
-                            <!-- Row1 -->
-                            <tr class="border-b border-gray-200 hover:bg-gray-200">
+                            <tr class="border-b border-gray-200 hover:bg-gray-200" v-for="project in projects" :key="project.id">
                                 <td class="p-2">
                                     <div class="flex">
-                                        <div class="text-gray-800 py-3 text-left whitespace-nowrap">Mohamed Ali</div>
+                                        <div class="text-gray-800 py-3 text-left whitespace-nowrap">{{ project?.owner?.username }}</div>
                                     </div>
                                 </td>
                                 <td class="p-2">
-                                    <div class="text-center">Team Zone</div>
+                                    <div class="text-center">{{ project.name }}</div>
                                 </td>
                                 <td class="p-2">
-                                    <div class="text-center">Omer Ahmed</div>
+                                    <div class="text-center">{{ project?.manager?.name }}</div>
                                 </td>
                                 <td class="p-2">
-                                    <div class="text-center"> 10/12/2022</div>
+                                    <div class="text-center">{{ project.deadline }}</div>
                                 </td>
                             </tr>
-                            <!--End of Row1 -->
-                            <!-- Row2 -->
-                            <tr class="border-b border-gray-200 hover:bg-gray-200">
-                                <td class="p-2">
-                                    <div class="flex">
-                                        <div class="text-gray-800 py-3 text-left whitespace-nowrap">Osman Alnorani</div>
-                                    </div>
-                                </td>
-                                <td class="p-2">
-                                    <div class="text-center">ERP System</div>
-                                </td>
-                                <td class="p-2">
-                                    <div class="text-center">Mustafa Omer</div>
-                                </td>
-                                <td class="p-2">
-                                    <div class="text-center"> 1/9/2022</div>
-                                </td>
-                            </tr>
-                            <!--End of Row2 -->
                             </tbody>
                         </table>
                     </div>
@@ -616,7 +452,13 @@ import MasterLayout from "@/Layouts/MasterLayout"
 
 export default defineComponent({
     props: {
-        projectManagers: Object
+        projectManagers: Object,
+        projects: Object,
+        logged_in_name: Object,
+        tasks_count: Object,
+        enquiries_count: Object
+    },
+    mounted() {
     },
     components: {
         MasterLayout,
