@@ -6,6 +6,7 @@ use App\Mail\SendReport;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -13,6 +14,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class UserController extends Controller
 {
 
+    //
     /**
      * send report as pdf to email.
      *
@@ -24,7 +26,6 @@ class UserController extends Controller
         $data = $request->validate([
             'from_date' => ['required', 'date'],
             'to_date' => ['required', 'date'],
-            'email' => ['required', 'string', 'email'],
         ]);
 
         $projects = Project::all();
@@ -49,7 +50,8 @@ class UserController extends Controller
                 $pdf = PDF::loadView('projects.report', $pdf_data);
                 $pdf_name = 'report_' . time() . '.pdf';
                 if (Storage::disk('public')->put('reports/' . $pdf_name, $pdf->output(), ['mime' => 'application/pdf'])) {
-                    Mail::to($data['email'])->send(new SendReport($pdf_name));
+                    $email = Auth::user()->email;
+                    Mail::to($email)->send(new SendReport($pdf_name));
                     return 'send';
                 }
             }
@@ -93,7 +95,6 @@ class UserController extends Controller
                 $x[] = $project;
             }
         }
-
         if (!empty($x)) {
             $pdf_data = [
                 'projects' => $projects,

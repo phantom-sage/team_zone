@@ -8,7 +8,7 @@
     Project code: <strong>{{ $project->code }}</strong>
 @endcomponent
 
-@component('mail::button', ['url' => route('client.login.to.project.page.get')])
+@component('mail::button', ['url' => route('projects.index')])
 See Project
 @endcomponent
 

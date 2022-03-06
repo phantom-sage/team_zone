@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Events\NewProjectCreated;
 use App\Models\Client;
 use App\Models\Project;
+use App\Models\TeamMember;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Event;
@@ -38,7 +39,7 @@ final class ProjectControllerTest extends TestCase
             $resp = $this->put(route('projects.rate', ['project' => $project['id']]), $data);
             $project->refresh();
             $resp->assertOk();
-            $this->assertSame(123, $project['rate']);
+            $this->assertEquals(123, $project['rate']);
             $this->assertDatabaseCount('projects', 1);
         }
     }
@@ -52,19 +53,24 @@ final class ProjectControllerTest extends TestCase
     public function create_project(): void
     {
         Event::fake();
-        $data = [
-            'name' => $this->faker->name(),
-            'deadline' => now(),
-            'client_username' => $this->faker->name(),
-            'client_email' => 'abdoeltayeb10@gmail.com',
-            'status' => $this->faker->title(),
-        ];
-        $resp = $this->post(route('projects.store'), $data);
-        Event::assertDispatched(NewProjectCreated::class);
+        TeamMember::factory(['type' => 'project_manager'])->create();
+        $project_manager_id = TeamMember::first()['id'] ?? null;
+        if ($project_manager_id != null) {
+            $data = [
+                'name' => $this->faker->name(),
+                'deadline' => now(),
+                'client_username' => $this->faker->name(),
+                'client_email' => 'abdoeltayeb10@gmail.com',
+                'status' => $this->faker->title(),
+                'project_manager_id' => $project_manager_id,
+            ];
+            $resp = $this->post(route('projects.store'), $data);
+            Event::assertDispatched(NewProjectCreated::class);
 
-        $resp->assertOk();
-        $this->assertDatabaseCount('projects', 1);
-        $this->assertDatabaseCount('clients', 1);
+            $resp->assertOk();
+            $this->assertDatabaseCount('projects', 1);
+            $this->assertDatabaseCount('clients', 1);
+        }
     }
 
     /**

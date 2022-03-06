@@ -7,6 +7,7 @@ use App\Models\Client;
 use App\Models\Project;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use App\Models\TeamMember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -59,12 +60,12 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
-        $data = $request->safe(['name', 'deadline', 'client_username', 'client_email', 'status']);
+        $data = $request->safe(['name', 'deadline', 'client_username', 'client_email', 'status', 'project_manager_id']);
         $client = new Client();
         $client['username'] = $data['client_username'];
         $client['email'] = $data['client_email'];
         $client->save();
-// TODO: ADD PROJECT MANAGER
+
         $project = new Project();
         $project['name'] = $data['name'];
         $project['deadline'] = $data['deadline'];
@@ -72,6 +73,13 @@ class ProjectController extends Controller
         $project['client_id'] = $client['id'] ?? null;
         $project['status'] = $data['status'];
         $project->save();
+
+        $project_manager = TeamMember::find($data['project_manager_id']) ?? null;
+        if ($project_manager != null) {
+            $project_manager['project_id'] = $project['id'];
+            $project_manager->save();
+        }
+
         NewProjectCreated::dispatch($project);
         return 'store';
     }
