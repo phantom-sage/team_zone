@@ -50,9 +50,11 @@ class UserController extends Controller
                 $pdf = PDF::loadView('projects.report', $pdf_data);
                 $pdf_name = 'report_' . time() . '.pdf';
                 if (Storage::disk('public')->put('reports/' . $pdf_name, $pdf->output(), ['mime' => 'application/pdf'])) {
-                    $email = Auth::user()->email;
-                    Mail::to($email)->send(new SendReport($pdf_name));
-                    return 'send';
+                    $user = Auth::user();
+                    if ($user != null) {
+                        Mail::to($user['email'] ?? null)->send(new SendReport($pdf_name));
+                        return 'send';
+                    }
                 }
             }
         }

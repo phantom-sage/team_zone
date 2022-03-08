@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\Project;
 use App\Models\Task;
+use App\Models\TeamMember;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -116,14 +118,19 @@ final class TaskControllerTest extends TestCase
      */
     public function add_task(): void
     {
+        Project::factory()->create();
+        TeamMember::factory()->create();
+
         $data = [
             'name' => $this->faker->name(),
             'description' => $this->faker->sentence(),
             'duration' => now()->format('d-m-Y'),
             'status' => $this->faker->name(),
+            'project_id' => Project::first()['id'] ?? null,
+            'team_member_id' => TeamMember::first()['id'] ?? null,
         ];
         $resp = $this->post(route('tasks.store'), $data);
-        $resp->assertOk();
+        $resp->assertStatus(302);
         $this->assertDatabaseCount('tasks', 1);
     }
 }

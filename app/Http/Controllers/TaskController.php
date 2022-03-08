@@ -33,17 +33,20 @@ class TaskController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreTaskRequest $request
-     * @return void
+     * @return string
      */
     public function store(StoreTaskRequest $request)
     {
-        $data = $request->safe(['name', 'duration', 'status', 'description']);
+        $data = $request->safe(['name', 'duration', 'status', 'description', 'project_id', 'team_member_id']);
         Task::create([
             'name' => $data['name'],
             'duration' => $data['duration'],
             'status' => $data['status'],
             'description' => $data['description'],
+            'project_id' => $data['project_id'],
+            'team_member_id' => $data['team_member_id'],
         ]);
+        return back();
     }
 
     /**

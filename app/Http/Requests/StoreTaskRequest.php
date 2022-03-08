@@ -28,6 +28,8 @@ class StoreTaskRequest extends FormRequest
             'duration' => ['required', 'date'],
             'status' => ['required', 'string', 'min:8', 'max:255'],
             'description' => ['required', 'string'],
+            'project_id' => ['required', 'integer'],
+            'team_member_id' => ['required', 'integer'],
         ];
     }
 }

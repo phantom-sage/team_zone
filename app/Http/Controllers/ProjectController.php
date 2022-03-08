@@ -15,6 +15,36 @@ class ProjectController extends Controller
 {
 
     /**
+     * add staff to project.
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function add_staff_to_project(Request $request)
+    {
+        $data = $request->validate([
+            'team_member_id' => ['required', 'integer'],
+            'project_id' => ['required', 'integer'],
+        ]);
+
+        $team_member = TeamMember::where('id', '=', $data['team_member_id'])->first() ?? null;
+        $project = Project::where('id', '=', $data['project_id'])->first() ?? null;
+        if ($team_member == null) {
+            return abort(404, 'NOT FOUND');
+        }
+
+        if ($project == null) {
+            return abort(404, 'NOT FOUND');
+        }
+
+        $project->staff()->attach($team_member['id'] ?? null, [
+            'role' => 'staff',
+        ]);
+        $project->save();
+        return back();
+    }
+
+    /**
      * client rate project after end.
      * @param Request $request
      * @param Project $project
@@ -74,7 +104,7 @@ class ProjectController extends Controller
         $project['status'] = $data['status'];
         $project->save();
 
-        $project_manager = TeamMember::find($data['project_manager_id']) ?? null;
+        $project_manager = TeamMember::where('id', '=', $data['project_manager_id'])->first() ?? null;
         if ($project_manager != null) {
             $project_manager['project_id'] = $project['id'];
             $project_manager->save();

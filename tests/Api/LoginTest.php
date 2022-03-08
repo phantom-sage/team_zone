@@ -5,6 +5,7 @@ namespace Tests\Api;
 
 use App\Models\Client;
 use App\Models\Project;
+use App\Models\Task;
 use App\Models\TeamMember;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -317,11 +318,14 @@ final class LoginTest extends TestCase
         $this->assertDatabaseCount('clients', 1);
 
         $p = Project::first();
-        $p->staff()->attach(TeamMember::first()->id, [
-            'role' => $this->faker->name(),
-        ]);
-        $p->save();
+        $t = TeamMember::first()['id'] ?? null;
+        if ($p != null && $t != null) {
+            $p->staff()->attach($t, [
+                'role' => $this->faker->name(),
+            ]);
+            $p->save();
 
+        }
         $data = [
             'username' => Client::first()['username'] ?? null,
             'code' => Project::first()['code'] ?? null,
