@@ -18,6 +18,8 @@ class Task extends Model
         'duration',
         'status',
         'description',
+        'project_id',
+        'team_member_id',
     ];
 
     /**

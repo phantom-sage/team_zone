@@ -125,10 +125,22 @@ final class ProjectControllerTest extends TestCase
             'code' => Project::first()['code'] ?? null,
         ]);
         $project = Project::first() ?? null;
+        $task = Task::first() ?? null;
 
-        if ($project) {
+        if ($project != null && $task != null) {
             $resp->assertJson(fn(AssertableJson $json) => $json
                 ->has('data', 11)
+                ->has('data.tasks.0', fn($json) => $json->where('id', $task['id'] ?? null)
+                    ->where('name', $task['name'] ?? null)
+                    ->where('duration', $task['duration'] ?? null)
+                    ->where('status', $task['status'] ?? null)
+                    ->where('description', $task['description'] ?? null)
+                    ->where('project', $task['project'] ?? null)
+                    ->where('master', $task['master'] ?? null)
+                    ->where('created_at', $task->created_at ? $task->created_at->format('Y-m-d h:i:s') : null)
+                    ->where('updated_at', $task->updated_at ? $task->updated_at->format('Y-m-d h:i:s') : null)
+                    ->etc()
+                )
                 ->has('data', fn($json) => $json->where('id', 1)
                     ->where('id', $project['id'] ?? null)
                     ->where('name', $project['name'] ?? null)
@@ -141,7 +153,6 @@ final class ProjectControllerTest extends TestCase
                     ->where('staff', $project['staff'] ?? null)
                     ->where('manager', $project['manager'] ?? null)
                     ->where('manager', $project['manager'] ?? null)
-                    ->where('tasks', $project['tasks'] ?? null)
                     ->etc()
                 )
             )->assertOk();
@@ -155,6 +166,7 @@ final class ProjectControllerTest extends TestCase
      */
     public function get_client_project_client_username_and_project_code(): void
     {
+        $this->withExceptionHandling();
         Client::factory()->create();
         Project::factory()->count(1)->create();
         TeamMember::factory()->create();
@@ -168,10 +180,22 @@ final class ProjectControllerTest extends TestCase
             'code' => Project::first()['code'] ?? null,
         ]);
         $project = Project::first() ?? null;
+        $task = Task::first() ?? null;
 
-        if ($project) {
+        if ($project != null && $task != null) {
             $resp->assertJson(fn(AssertableJson $json) => $json
                 ->has('data', 11)
+                ->has('data.tasks.0', fn($json) => $json->where('id', $task['id'] ?? null)
+                    ->where('name', $task['name'] ?? null)
+                    ->where('duration', $task['duration'] ?? null)
+                    ->where('status', $task['status'] ?? null)
+                    ->where('description', $task['description'] ?? null)
+                    ->where('project', $task['project'] ?? null)
+                    ->where('master', $task['master'] ?? null)
+                    ->where('created_at', $task->created_at ? $task->created_at->format('Y-m-d h:i:s') : null)
+                    ->where('updated_at', $task->updated_at ? $task->updated_at->format('Y-m-d h:i:s') : null)
+                    ->etc()
+                )
                 ->has('data', fn($json) => $json->where('id', 1)
                     ->where('id', $project['id'] ?? null)
                     ->where('name', $project['name'] ?? null)
@@ -184,7 +208,6 @@ final class ProjectControllerTest extends TestCase
                     ->where('staff', $project['staff'] ?? null)
                     ->where('manager', $project['manager'] ?? null)
                     ->where('manager', $project['manager'] ?? null)
-                    ->where('tasks', $project['tasks'] ?? null)
                     ->etc()
                 )
             )->assertOk();

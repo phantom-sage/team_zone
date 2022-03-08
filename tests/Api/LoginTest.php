@@ -5,6 +5,8 @@ namespace Tests\Api;
 
 use App\Models\Client;
 use App\Models\Project;
+use App\Models\Task;
+use App\Models\TeamMember;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -311,9 +313,19 @@ final class LoginTest extends TestCase
     public function login_as_client_with_valid_username_and_valid_project_code(): void
     {
         Project::factory()->create();
+        TeamMember::factory()->create();
         $this->assertDatabaseCount('projects', 1);
         $this->assertDatabaseCount('clients', 1);
 
+        $p = Project::first();
+        $t = TeamMember::first()['id'] ?? null;
+        if ($p != null && $t != null) {
+            $p->staff()->attach($t, [
+                'role' => $this->faker->name(),
+            ]);
+            $p->save();
+
+        }
         $data = [
             'username' => Client::first()['username'] ?? null,
             'code' => Project::first()['code'] ?? null,

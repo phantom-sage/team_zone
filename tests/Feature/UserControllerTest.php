@@ -4,8 +4,10 @@ namespace Tests\Feature;
 
 use App\Mail\SendReport;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
@@ -23,17 +25,21 @@ final class UserControllerTest extends TestCase
     {
         Mail::fake();
         Project::factory()->count(10)->create();
+        User::factory()->create();
         $this->assertDatabaseCount('projects', 10);
 
-        $data = [
-            'from_date' => now()->format('Y-m-d'),
-            'to_date' => now()->format('Y-m-d'),
-            'email' => 'abdoaltayeb10@gmail.com',
-        ];
+        $user = User::first() ?? null;
+        if ($user != null) {
+            $data = [
+                'from_date' => now()->format('Y-m-d'),
+                'to_date' => now()->format('Y-m-d'),
+                'email' => $user['email'] ?? null,
+            ];
 
-        $resp = $this->post(route('reports.send.email'), $data);
-        $resp->assertOk();
-        Mail::assertSent(SendReport::class);
+            $resp = $this->actingAs($user)->post(route('reports.send.email'), $data);
+            $resp->assertOk();
+            Mail::assertSent(SendReport::class);
+        }
     }
 
     /**

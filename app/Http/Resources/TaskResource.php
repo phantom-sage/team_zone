@@ -4,12 +4,12 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProjectResource extends JsonResource
+class TaskResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
@@ -17,15 +17,13 @@ class ProjectResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'deadline' => $this->deadline,
-            'code' => $this->code,
+            'duration' => $this->duration,
             'status' => $this->status,
+            'description' => $this->description,
+            'project' => $this->project,
+            'master' => $this->master,
             'created_at' => $this->created_at->format('Y-m-d h:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d h:i:s'),
-            'owner' => $this->owner,
-            'staff' => $this->staff,
-            'manager' => $this->manager,
-            'tasks' => TaskResource::collection($this->tasks),
         ];
     }
 }
