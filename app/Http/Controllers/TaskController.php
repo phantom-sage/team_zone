@@ -5,10 +5,33 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class TaskController extends Controller
 {
+
+    /**
+     * update task status.
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function update_task_status(Request $request)
+    {
+        $data = $request->validate([
+            'status' => ['required', 'string', 'max:255', 'min:3'],
+            'task_id' => ['required', 'integer'],
+        ]);
+        $task = Task::where('id', '=', $data['task_id'])->first() ?? null;
+        $task->status = $data['status'];
+        $task->save();
+        session()->flash('flash.banner', 'Task status updated successfully');
+        session()->flash('flash.bannerStyle', 'success');
+        return back();
+    }
+
     /**
      * Display a listing of the resource.
      *

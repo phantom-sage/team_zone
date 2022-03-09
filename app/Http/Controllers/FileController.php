@@ -49,7 +49,9 @@ class FileController extends Controller
                 'project_id' => $data['project_id'],
             ]);
         }
-        return 'store';
+        session()->flash('flash.banner', 'Uploaded successfully');
+        session()->flash('flash.bannerStyle', 'success');
+        return back();
     }
 
     /**
