@@ -196,7 +196,7 @@
                 <div>
                     <div v-if="showModal1"
                          class="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
-                        <div class="relative w-auto max-w-3xl mx-auto my-6">
+                        <div class="relative mx-auto my-6">
                             <!--content-->
                             <div
                                 class="relative flex flex-col w-full bg-white border-0 rounded-lg shadow-lg outline-none focus:outline-none">
@@ -221,7 +221,7 @@
                                         <div class="overflow-hidden shadow sm:rounded-md">
                                             <div class="px-4 py-5 bg-white sm:p-6">
                                                 <div class="grid grid-cols-4 gap-4 ">
-                                                    <div class="col-span-6 sm:col-span-4">
+                                                    <div class="col-span-4 sm:col-span-4 w-96">
                                                         <label for="project-name"
                                                                class="block text-sm font-medium text-gray-700">Project
                                                             Name</label>
@@ -231,7 +231,7 @@
                                                         <span class="text-red-600 font-weight-bold" v-if="projectForm.errors.name">{{ projectForm.errors.name }}</span>
                                                     </div>
 
-                                                    <div class="col-span-6 sm:col-span-4">
+                                                    <div class="col-span-4 sm:col-span-4">
                                                         <label for="client-name"
                                                                class="block text-sm font-medium text-gray-700">Client
                                                             Name</label>
@@ -241,7 +241,7 @@
                                                         <span class="text-red-600 font-weight-bold" v-if="projectForm.errors.client_username">{{ projectForm.errors.client_username }}</span>
                                                     </div>
 
-                                                    <div class="col-span-6 sm:col-span-4">
+                                                    <div class="col-span-4 sm:col-span-4">
                                                         <label for="client-name"
                                                                class="block text-sm font-medium text-gray-700">Status</label>
                                                         <input type="text" name="status" id="client-name" v-model="projectForm.status"
@@ -250,7 +250,7 @@
                                                         <span class="text-red-600 font-weight-bold" v-if="projectForm.errors.status">{{ projectForm.errors.status }}</span>
                                                     </div>
 
-                                                    <div class="col-span-6 sm:col-span-4">
+                                                    <div class="col-span-4 sm:col-span-4">
                                                         <label for="client-email"
                                                                class="block text-sm font-medium text-gray-700">Client
                                                             E-mail</label>
@@ -260,7 +260,7 @@
                                                         <span class="text-red-600 font-weight-bold" v-if="projectForm.errors.client_email">{{ projectForm.errors.client_email }}</span>
                                                     </div>
 
-                                                    <div class="col-span-6 sm:col-span-4">
+                                                    <div class="col-span-4 sm:col-span-4">
                                                         <label for="pmanager"
                                                                class="block text-sm font-medium text-gray-700">Project
                                                             Manager</label>
@@ -273,7 +273,7 @@
                                                         </select>
                                                         <span class="text-red-600 font-weight-bold" v-if="projectForm.errors.project_manager_id">{{ projectForm.errors.project_manager_id }}</span>
                                                     </div>
-                                                    <div class="col-span-6 sm:col-span-4">
+                                                    <div class="col-span-4 sm:col-span-4">
                                                         <label for="client-email"
                                                                class="block text-sm font-medium text-gray-700">Project
                                                             Deadline</label>
