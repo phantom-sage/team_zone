@@ -8,12 +8,8 @@
             </Link>
 
             <template v-else>
-<<<<<<< HEAD
 
-                <Link :href="route('login.as')" class="ml-4 text-sm text-gray-700 underline mr-2">
-=======
-                <Link :href="route('login.by.type')" class="px-6 py-2 ml-4 mr-4 text-lg text-white transition ease-in-out delay-150 bg-blue-500 rounded-2xl hover:bg-blue-600 focus:outline-none hover:drop-shadow-xl">
->>>>>>> c21313a52650b3f1e4c6768778f174c5bbf98f12
+                <Link :href="route('login.as')" class="px-6 py-2 ml-4 mr-4 text-lg text-white transition ease-in-out delay-150 bg-blue-500 rounded-2xl hover:bg-blue-600 focus:outline-none hover:drop-shadow-xl">
                     Login as
                 </Link>
 
