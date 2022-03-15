@@ -1,7 +1,9 @@
 <template>
     <master-layout title="Hr">
         <div id="home">
-            <Banner/>
+            <div class="my-5 mx-auto">
+                <Banner />
+            </div>
             <div class="float-right my-4">
                 <form @submit.prevent="logout">
                     <button type="submit" class="flex justify-between">
@@ -33,7 +35,7 @@
             </nav>
             <!-- breadcrumb end -->
             <div class="lg:flex justify-between items-center mb-6">
-                <p class="text-2xl font-semibold mb-2 lg:mb-0">Hello, Abdo!</p>
+                <p class="text-2xl font-semibold mb-2 lg:mb-0">Hello, {{ hr_manager_name }}</p>
             </div>
             <div class="flex flex-wrap -mx-3 mb-20">
 
@@ -345,7 +347,8 @@ import MasterLayout from "@/Layouts/MasterLayout";
 export default {
     name: "Hr",
     props: {
-        session_hr_manager_id: Object
+        session_hr_manager_id: Object,
+        hr_manager_name: Object
     },
     components: {
         Banner,

@@ -9,7 +9,7 @@
 
             <template v-else>
 
-                <Link :href="route('login.by.type')" class="ml-4 text-sm text-gray-700 underline mr-2">
+                <Link :href="route('login.as')" class="ml-4 text-sm text-gray-700 underline mr-2">
                     Login as
                 </Link>
 

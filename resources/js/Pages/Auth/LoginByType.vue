@@ -70,11 +70,11 @@ export default {
     methods: {
         submit() {
             if (this.form.type === 'hr_manager') {
-                this.form.post(this.route('login.as'));
+                this.form.post(this.route('login.by.type'));
             } else if (this.form.type === 'project_manager') {
-                this.form.post(this.route('login.as'));
+                this.form.post(this.route('login.by.type'));
             } else if (this.form.type === 'team_member') {
-                this.form.post(this.route('login.as'));
+                this.form.post(this.route('login.by.type'));
             }
         }
     }

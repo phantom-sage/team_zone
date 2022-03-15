@@ -991,6 +991,9 @@ select {
 .bottom-10 {
   bottom: 2.5rem;
 }
+.bottom-0 {
+  bottom: 0px;
+}
 .z-0 {
   z-index: 0;
 }
@@ -1037,13 +1040,13 @@ select {
   margin-left: -0.75rem;
   margin-right: -0.75rem;
 }
-.my-4 {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
 .my-5 {
   margin-top: 1.25rem;
   margin-bottom: 1.25rem;
+}
+.my-4 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 .my-16 {
   margin-top: 4rem;
@@ -1300,6 +1303,9 @@ select {
 }
 .basis-3\/4 {
   flex-basis: 75%;
+}
+.basis-6\/12 {
+  flex-basis: 50%;
 }
 .basis-4\/12 {
   flex-basis: 33.333333%;
