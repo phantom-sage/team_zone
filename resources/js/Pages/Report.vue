@@ -1,24 +1,40 @@
 <template>
     <master-layout title="Report">
-        <div id="home">
-            <div class="flex flex-row mb-8">
+        <div id="home" class="p-8">
+            <!-- breadcrumb -->
+            <nav class="mb-6 text-sm font-semibold" aria-label="Breadcrumb">
+                <ol class="inline-flex p-0 list-none">
+                    <li class="flex items-center text-blue-500">
+                        <a href="#" class="text-gray-700">Dashboard</a>
+                        <svg class="w-3 h-3 mx-3 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                            <path
+                                d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/>
+                        </svg>
+                    </li>
+                    <li class="flex items-center">
+                        <a href="#" class="text-gray-600">Reports</a>
+                    </li>
+                </ol>
+            </nav>
+            <!-- breadcrumb end -->
+            <div class="flex flex-row mb-8 ml-72">
                 <form @submit.prevent="submit">
                     <div class="basis-4/12">
                         <label for="client-email" class="block text-sm font-medium text-gray-700">From Date</label>
                         <input type="date" v-model="form.from_date" name="from_date" id="client-email"
                                autocomplete="given-name"
-                               class="mt-1 h-8 focus:outline-none block w-full shadow-sm sm:text-sm border-solid border-2 border-gray-300 rounded-md">
+                               class="block w-full h-8 mt-1 border-2 border-gray-300 border-solid rounded-md shadow-sm focus:outline-none sm:text-sm">
                     </div>
                     <div class="basis-4/12">
                         <label for="client-email" class="block text-sm font-medium text-gray-700">To Date</label>
                         <input v-model="form.to_date" type="date" name="to_date" id="client-email"
                                autocomplete="given-name"
-                               class="mt-1 h-8 focus:outline-none block w-full shadow-sm sm:text-sm border-solid border-2 border-gray-300 rounded-md">
+                               class="block w-full h-8 mt-1 border-2 border-gray-300 border-solid rounded-md shadow-sm focus:outline-none sm:text-sm">
                     </div>
                     <div class="basis-4/12">
                         <label for="Projects" class="block text-sm font-medium text-gray-700">Project</label>
                         <select id="Projects" name="Projects" autocomplete="Projects-name"
-                                class="mt-1 h-8 bg-white focus:outline-none block w-full shadow-sm sm:text-sm border-solid border-2 border-gray-300 rounded-md">
+                                class="block w-full h-8 mt-1 bg-white border-2 border-gray-300 border-solid rounded-md shadow-sm focus:outline-none sm:text-sm">
                             <option>All</option>
                             <option>Team Zone</option>
                             <option>ERP System</option>
@@ -26,12 +42,12 @@
                     </div>
                     <div class="grid grid-cols-6 gap-4 px-5 py-4 border-b border-gray-100">
                         <button
-                            class="col-start-1 col-end-3 w-40 bg-blue-500 hover:bg-blue-600 focus:outline-none rounded-lg px-6 py-2 text-white font-semibold shadow"
+                            class="w-40 col-start-1 col-end-3 px-6 py-2 font-semibold text-white bg-blue-500 rounded-lg shadow hover:bg-blue-600 focus:outline-none"
                             type="button" v-on:click="submit('extract')">
                             Extract
                         </button>
                         <button
-                            class="col-end-7 col-span-2 w-40 bg-blue-500 hover:bg-blue-600 focus:outline-none rounded-lg px-6 py-2 text-white font-semibold shadow"
+                            class="w-40 col-span-2 col-end-7 px-6 py-2 font-semibold text-white bg-blue-500 rounded-lg shadow hover:bg-blue-600 focus:outline-none"
                             type="button" v-on:click="submit('send')">
                             Send
                         </button>
@@ -41,9 +57,9 @@
 
             <div class="p-3">
                 <div class="overflow-x-auto">
-                    <table class="table-auto w-full">
+                    <table class="w-full table-auto">
                         <!-- Table navbar -->
-                        <thead class="text-sm leading-normal uppercase text-gray-600 bg-gray-200 rounded-sm">
+                        <thead class="text-sm leading-normal text-gray-600 uppercase bg-gray-200 rounded-sm">
                         <tr>
                             <th class="p-2">
                                 <div class="font-semibold text-left">PROJECT</div>
@@ -60,13 +76,13 @@
                         </tr>
                         </thead>
                         <!-- Table body -->
-                        <tbody class="font-medium divide-y divide-gray-100 text-gray-600 text-sm">
+                        <tbody class="text-sm font-medium text-gray-600 divide-y divide-gray-100">
                         <!-- Row1 -->
                         <tr v-for="project in projects" :key="project.id"
                             class="border-b border-gray-200 hover:bg-gray-200">
                             <td class="p-2">
                                 <div class="flex">
-                                    <div class="text-gray-800 py-3 text-left whitespace-nowrap">{{ project.name }}</div>
+                                    <div class="py-3 text-left text-gray-800 whitespace-nowrap">{{ project.name }}</div>
                                 </div>
                             </td>
                             <td class="p-2">
@@ -77,16 +93,16 @@
                             </td>
                             <td class="p-2">
                                 <div class="text-center">
-                                    <span class="bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs" v-if="project.status =='Active'">
+                                    <span class="px-3 py-1 text-xs text-purple-600 bg-purple-200 rounded-full" v-if="project.status =='Active'">
                                        Active
                                     </span>
-                                    <span class="bg-green-200 text-purple-600 py-1 px-3 rounded-full text-xs" v-if="project.status =='completed'">
+                                    <span class="px-3 py-1 text-xs text-purple-600 bg-green-200 rounded-full" v-if="project.status =='completed'">
                                        Completed
                                     </span>
-                                    <span class="bg-yellow-200 text-purple-600 py-1 px-3 rounded-full text-xs" v-if="project.status =='inprogress'">
+                                    <span class="px-3 py-1 text-xs text-purple-600 bg-yellow-200 rounded-full" v-if="project.status =='inprogress'">
                                        In-progress
                                     </span>
-                                    <span class="bg-red-200 text-purple-600 py-1 px-3 rounded-full text-xs" v-if="project.status =='failed'">
+                                    <span class="px-3 py-1 text-xs text-purple-600 bg-red-200 rounded-full" v-if="project.status =='failed'">
                                        Failed
                                     </span>
                                 </div>

@@ -121,7 +121,7 @@ final class FileControllerTest extends TestCase
                 'project_id' => $project_id
             ];
             $resp = $this->post(route('files.store'), $data);
-            $resp->assertOk();
+            $resp->assertRedirect();
             Storage::disk('public')->assertExists('projects/' . $file->hashName());
             $this->assertDatabaseCount('files', 1);
         }
