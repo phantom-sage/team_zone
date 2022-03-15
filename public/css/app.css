@@ -991,6 +991,9 @@ select {
 .bottom-10 {
   bottom: 2.5rem;
 }
+.bottom-0 {
+  bottom: 0px;
+}
 .z-0 {
   z-index: 0;
 }
@@ -1345,6 +1348,9 @@ select {
 }
 .basis-2\/3 {
   flex-basis: 66.666667%;
+}
+.basis-6\/12 {
+  flex-basis: 50%;
 }
 .table-auto {
   table-layout: auto;
