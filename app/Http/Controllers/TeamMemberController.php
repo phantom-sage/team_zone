@@ -52,6 +52,7 @@ class TeamMemberController extends Controller
         if (session()->has('team_member_id') && session()->has('team_member_name') && session()->has('team_member_email')) {
             try {
                 $team_member = TeamMember::where('id', '=', session()->get('team_member_id'))->first() ?? null;
+                //dd(count($team_member->messages()->get()));
                 if ($team_member != null) {
                     $project_id = $team_member->task->project_id ?? null;
                     $project = Project::where('id', '=', $project_id)->first() ?? null;
@@ -63,6 +64,7 @@ class TeamMemberController extends Controller
                         'team_members' => TeamMember::all()->filter(function ($team_member) use($session_team_member_id) {
                             return $team_member->id != $session_team_member_id;
                         }),
+                        'team_member_messages' => $team_member->messages()->get(),
                     ]);
                 }
                 return abort(404, 'NOT FOUND');
@@ -127,7 +129,7 @@ class TeamMemberController extends Controller
                         'session_project_manager_id' => session()->get('project_manager_id'),
                         'admins' => User::all(),
                         'team_members' => TeamMember::all(),
-                        'project_manager_messages' => $project_manager->load('messages'),
+                        'project_manager_messages' => $project_manager->messages()->get(),
                     ]);
                 } else {
                     return abort(404, 'NOT FOUND');

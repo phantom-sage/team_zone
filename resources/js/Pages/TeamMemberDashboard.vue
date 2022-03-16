@@ -66,9 +66,9 @@
                     @focusin="dropdownOpen = true"
                     @focusout="dropdownOpen = false"
                 >
-<!--                    <li v-for="msg in project_manager_messages" class="border-b border-gray-200 last:border-0">-->
-<!--                        <span class="font-medium text-gray-800">{{ msg?.message }}</span>-->
-<!--                    </li>-->
+                    <li v-for="msg in team_member_messages" class="border-b border-gray-200 last:border-0">
+                        <span class="font-medium text-gray-800">{{ msg?.message }}</span>
+                    </li>
                 </ul>
                 <button class="bg-blue-500 hover:bg-blue-600 focus:outline-none w-full px-6 py-2 text-white font-semibold shadow" type="button" v-on:click="openMessageDialog">
                     Send Message
@@ -418,11 +418,15 @@ export default {
     computed: {
         ...mapState(['sideBarOpen'])
     },
+    mounted() {
+        console.log(this.team_member_messages[0])
+    },
     props: {
         'team_member': Object,
         'project': Object,
         'session_team_member_id': Object,
-        'team_members': Object
+        'team_members': Object,
+        'team_member_messages': Object
     },
     data() {
         return {
