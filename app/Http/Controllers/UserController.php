@@ -6,6 +6,7 @@ use App\Mail\SendReport;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -14,7 +15,6 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class UserController extends Controller
 {
 
-    //
     /**
      * send report as pdf to email.
      *
@@ -26,23 +26,21 @@ class UserController extends Controller
         $data = $request->validate([
             'from_date' => ['required', 'date'],
             'to_date' => ['required', 'date'],
+            'project' => ['required'],
         ]);
 
-        $projects = Project::all();
-        $x = [];
-        if ($projects != null) {
-            foreach ($projects as $project) {
-                if ($project != null) {
-                    $p_c = $project->created_at ? $project->created_at->format('Y-m-d') : null;
-                    if ($p_c <= $data['from_date'] && $p_c <= $data['to_date']
-                    ) {
-                        $x[] = $project;
-                    }
-                }
-            }
-            if (!empty($x)) {
+        $from_date = Carbon::parse($data['from_date'])->format('Y-m-d');
+        $to_date = Carbon::parse($data['to_date'])->format('Y-m-d');
+
+        if ($data['project'] == 'all') {
+
+            $projects = Project::all()->filter(function ($project) use ($from_date, $to_date) {
+                return $project->created_at->format('Y-m-d') <= $from_date || $project->created_at->format('Y-m-d') <= $to_date;
+            });
+
+            if (!empty($projects)) {
                 $pdf_data = [
-                    'projects' => $x,
+                    'projects' => $projects,
                     'date' => now(),
                     'title' => env('APP_NAME', 'TeamZone')
                 ];
@@ -53,11 +51,38 @@ class UserController extends Controller
                     $user = Auth::user();
                     if ($user != null) {
                         Mail::to($user['email'] ?? null)->send(new SendReport($pdf_name));
-                        return 'send';
+                        session()->flash('flash.banner', 'Send successfully');
+                        session()->flash('flash.bannerStyle', 'success');
+                        return back();
                     }
                 }
             }
+            return abort(404, 'NOT FOUND');
         }
+
+        $project = Project::find($data['project'])->filter(function ($p) use ($from_date, $to_date) {
+            return $p->created_at->format('Y-m-d') <= $from_date || $p->created_at->format('Y-m-d') <= $to_date;
+        });
+        if (!empty($project)) {
+            $pdf_data = [
+                'projects' => $project,
+                'date' => now(),
+                'title' => env('APP_NAME', 'TeamZone')
+            ];
+
+            $pdf = PDF::loadView('projects.report', $pdf_data);
+            $pdf_name = 'report_' . time() . '.pdf';
+            if (Storage::disk('public')->put('reports/' . $pdf_name, $pdf->output(), ['mime' => 'application/pdf'])) {
+                $user = Auth::user();
+                if ($user != null) {
+                    Mail::to($user['email'] ?? null)->send(new SendReport($pdf_name));
+                    session()->flash('flash.banner', 'Send successfully');
+                    session()->flash('flash.bannerStyle', 'success');
+                    return back();
+                }
+            }
+        }
+
         return abort(404, 'NOT FOUND');
     }
 
@@ -88,30 +113,54 @@ class UserController extends Controller
         $data = $request->validate([
             'from_date' => ['required', 'date'],
             'to_date' => ['required', 'date'],
+            'project' => ['required'],
         ]);
-        $projects = Project::all();
-        $x = [];
-        foreach ($projects as $project) {
-            $p_c = $project->created_at ? $project->created_at->format('Y-m-d') : null;
-            if ($p_c <= $data['from_date'] && $p_c <= $data['to_date']) {
-                $x[] = $project;
+        $from_date = Carbon::parse($data['from_date'])->format('Y-m-d');
+        $to_date = Carbon::parse($data['to_date'])->format('Y-m-d');
+
+        if ($data['project'] == 'all') {
+
+            $projects = Project::all()->filter(function ($project) use ($from_date, $to_date) {
+                return $project->created_at->format('Y-m-d') <= $from_date || $project->created_at->format('Y-m-d') <= $to_date;
+            });
+
+            if (!empty($projects)) {
+                $pdf_data = [
+                    'projects' => $projects,
+                    'date' => now(),
+                    'title' => env('APP_NAME', 'TeamZone')
+                ];
+
+                $pdf = PDF::loadView('projects.report', $pdf_data);
+                $pdf_name = 'report_' . time() . '.pdf';
+                $pdf_created = Storage::disk('public')
+                    ->put('reports/' . $pdf_name, $pdf->output(), ['mime' => 'application/pdf']);
+                if ($pdf_created) {
+                    $pdf_to_download = Storage::disk('public')->path('reports/' . $pdf_name);
+                    return response()->download($pdf_to_download, 'report.pdf', [
+                        'Content-Disposition' => 'attachment;',
+                    ], 'attachment');
+                }
             }
+            return abort(404, 'NOT FOUND');
         }
-        if (!empty($x)) {
+
+        $project = Project::find($data['project']);
+        if (!empty($project)) {
             $pdf_data = [
-                'projects' => $projects,
+                'project' => $project,
                 'date' => now(),
                 'title' => env('APP_NAME', 'TeamZone')
             ];
 
-            $pdf = PDF::loadView('projects.report', $pdf_data);
+            $pdf = PDF::loadView('projects.single', $pdf_data);
             $pdf_name = 'report_' . time() . '.pdf';
             $pdf_created = Storage::disk('public')
                 ->put('reports/' . $pdf_name, $pdf->output(), ['mime' => 'application/pdf']);
             if ($pdf_created) {
                 $pdf_to_download = Storage::disk('public')->path('reports/' . $pdf_name);
                 return response()->download($pdf_to_download, 'report.pdf', [
-                    'Content-Disposition' =>  'attachment;',
+                    'Content-Disposition' => 'attachment;',
                 ], 'attachment');
             }
         }

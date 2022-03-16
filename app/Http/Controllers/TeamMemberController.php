@@ -7,6 +7,7 @@ use App\Models\Project;
 use App\Models\TeamMember;
 use App\Http\Requests\StoreTeamMemberRequest;
 use App\Http\Requests\UpdateTeamMemberRequest;
+use App\Models\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -52,11 +53,16 @@ class TeamMemberController extends Controller
             try {
                 $team_member = TeamMember::where('id', '=', session()->get('team_member_id'))->first() ?? null;
                 if ($team_member != null) {
-                    $project_id = $team_member->task->project_id;
+                    $project_id = $team_member->task->project_id ?? null;
                     $project = Project::where('id', '=', $project_id)->first() ?? null;
+                    $session_team_member_id = session()->get('team_member_id') ?? 0;
                     return Inertia::render('TeamMemberDashboard', [
                         'team_member' => $team_member->load('task'),
-                        'project' => $project
+                        'project' => $project,
+                        'session_team_member_id' => $session_team_member_id,
+                        'team_members' => TeamMember::all()->filter(function ($team_member) use($session_team_member_id) {
+                            return $team_member->id != $session_team_member_id;
+                        }),
                     ]);
                 }
                 return abort(404, 'NOT FOUND');
@@ -104,9 +110,11 @@ class TeamMemberController extends Controller
             if ($project_manager != null) {
                 $client = Client::where('id', '=', $project_manager->project->client_id)->first() ?? null;
                 $project = Project::where('id', '=', $project_manager['project_id'] ?? null)->first() ?? null;
-                $legitimate_team_members = TeamMember::where('project_id', '=', null)->where('type', '!=', 'project_manager')->get() ?? null;
+                $legitimate_team_members = TeamMember::all()->filter(function ($item) {
+                    return count($item->projects) == 0 && $item->project_id == null && $item->type == 'team_member';
+                });
                 $legitimate_team_members_for_task_assignment = TeamMember::all()->filter(function ($team_member) {
-                    return $team_member->task == null;
+                    return ($team_member->task == null && $team_member->type == 'team_member') && count($team_member->projects) > 0;
                 });
                 if ($client != null) {
                     return Inertia::render('ProjectManagerDashboard', [
@@ -117,6 +125,9 @@ class TeamMemberController extends Controller
                         'legitimate_team_members' => $legitimate_team_members,
                         'legitimate_team_members_for_task_assignment' => $legitimate_team_members_for_task_assignment,
                         'session_project_manager_id' => session()->get('project_manager_id'),
+                        'admins' => User::all(),
+                        'team_members' => TeamMember::all(),
+                        'project_manager_messages' => $project_manager->load('messages'),
                     ]);
                 } else {
                     return abort(404, 'NOT FOUND');
@@ -152,7 +163,7 @@ class TeamMemberController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreTeamMemberRequest $request
-     * @return void
+     * @return string
      */
     public function store(StoreTeamMemberRequest $request)
     {
@@ -164,6 +175,9 @@ class TeamMemberController extends Controller
             'email' => $data['email'],
             'type' => $data['type'],
         ]);
+        session()->flash('flash.banner', 'Team member added successfully');
+        session()->flash('flash.bannerStyle', 'success');
+        return back();
     }
 
     /**

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Hr;
 use App\Http\Requests\StoreHrRequest;
 use App\Http\Requests\UpdateHrRequest;
+use App\Models\TeamMember;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -49,9 +50,11 @@ class HrController extends Controller
     {
         if (session()->has('hr_manager_id') && session()->has('hr_manager_name') && session()->has('hr_manager_email')) {
             $hr_manager = Hr::where('id', '=', session()->get('hr_manager_id'))->first() ?? null;
+            $team_members = TeamMember::all() ?? null;
             return Inertia::render('Hr', [
                 'session_hr_manager_id' => session()->get('hr_manager_id'),
                 'hr_manager_name' => $hr_manager['name'],
+                'team_members' => $team_members->load('project'),
             ]);
         }
         return redirect('/');
@@ -92,7 +95,9 @@ class HrController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
-        return 'store';
+        session()->flash('flash.banner', 'Hr Added successfully');
+        session()->flash('flash.bannerStyle', 'success');
+        return back();
     }
 
     /**

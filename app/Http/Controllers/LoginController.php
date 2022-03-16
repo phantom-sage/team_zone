@@ -59,7 +59,7 @@ class LoginController extends Controller
                 'password' => ['string', 'max:255', 'min:8'],
                 'type' => ['string', 'required', 'regex:/^(project_manager)$/'],
             ]);
-            $project_manager = TeamMember::where('email', '=', $data['email'])->first() ?? null;
+            $project_manager = TeamMember::where('email', '=', $data['email'])->where('type', '=', 'project_manager')->first() ?? null;
             if (!$project_manager) {
                 return abort(404, 'NOT FOUND');
             }
@@ -82,7 +82,7 @@ class LoginController extends Controller
                 "password" => ['string', 'min:8', 'max:255', 'required'],
                 "type" => ['string', 'required', 'regex:/^(team_member)$/'],
             ]);
-            $team_member = TeamMember::where('email', '=', $data['email'])->first() ?? null;
+            $team_member = TeamMember::where('email', '=', $data['email'])->where('type', '=', 'team_member')->first() ?? null;
             if ($team_member == null) {
                 return abort(404, 'NOT FOUND');
             }

@@ -26,7 +26,7 @@ class StoreTaskRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'min:8', 'max:255'],
             'duration' => ['required', 'date'],
-            'status' => ['required', 'string', 'min:8', 'max:255'],
+            'status' => ['required', 'string', 'min:3', 'max:255'],
             'description' => ['required', 'string'],
             'project_id' => ['required', 'integer'],
             'team_member_id' => ['required', 'integer'],

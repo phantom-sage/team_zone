@@ -1,7 +1,58 @@
 <template>
     <master-layout title="Dashboard">
-        <div id="home" class="p-8">
+        <slot name="sidebar">
+            <div
+                class="w-1/2 md:w-1/3 lg:w-64 fixed md:top-0 md:left-0 h-screen lg:block bg-gray-100 border-r"
+                :class="sideBarOpen ? '' : 'hidden'"
+                id="main-nav"
+            >
+                <div class="w-full h-20 border-b flex px-4 items-center mb-8">
+                    <p class="font-semibold text-3xl text-blue-400 pl-4">TEAM ZONE</p>
+                </div>
 
+                <div class="mb-4 px-4">
+                    <p class="pl-4 text-sm font-semibold mb-1">MAIN</p>
+                    <div
+                        class="w-full flex items-center text-blue-400 h-10 pl-4 bg-gray-200 hover:bg-gray-200 rounded-lg cursor-pointer"
+                    >
+                        <jet-nav-link :href="route('dashboard')">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
+                                 stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                            </svg>
+                            <span class="text-gray-700">Dashboard</span>
+                        </jet-nav-link>
+                    </div>
+                    <div class="w-full flex items-center text-blue-400 h-10 pl-4 hover:bg-gray-200 rounded-lg cursor-pointer">
+                        <jet-nav-link :href="route('admin.report.page')" :active="route().current('admin.report.page')">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
+                                 stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            <span class="text-gray-700">Reports</span>
+                        </jet-nav-link>
+                    </div>
+                    <div
+                        class="w-full flex items-center text-blue-400 h-10 pl-4 hover:bg-gray-200 rounded-lg cursor-pointer">
+                        <form @submit.prevent="logout">
+                            <button type="submit" class="flex justify-between">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 d-inline" fill="none"
+                                     viewBox="0 0 24 24"
+                                     stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                                </svg>
+                                <span class="text-gray-700">Logout</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </slot>
+        <div id="home" class="p-8">
+            <Banner />
             <!-- breadcrumb -->
             <nav class="mb-6 text-sm font-semibold" aria-label="Breadcrumb">
                 <ol class="inline-flex p-0 list-none">
@@ -56,9 +107,8 @@
                                     <div class="overflow-hidden shadow sm:rounded-md">
                                         <div class="px-4 py-5 bg-white sm:p-6">
                                             <div class="grid grid-cols-4 gap-4 ">
-                                                <div class="col-span-6 sm:col-span-4">
-                                                    <label for="hrname" class="block text-sm font-medium text-gray-700">User
-                                                        Name</label>
+                                                <div class="col-span-6 sm:col-span-4 w-96">
+                                                    <label for="hrname" class="block text-sm font-medium text-gray-700">Name</label>
                                                     <input type="text" v-model="hrForm.name" name="name" id="hrname"
                                                            autocomplete="given-name"
                                                            class="block w-full h-8 mt-1 border-2 border-gray-300 border-solid rounded-md shadow-sm focus:outline-none sm:text-sm">
@@ -67,7 +117,7 @@
 
                                                 <div class="col-span-6 sm:col-span-4">
                                                     <label for="hrUsername"
-                                                           class="block text-sm font-medium text-gray-700">E-mail</label>
+                                                           class="block text-sm font-medium text-gray-700">Username</label>
                                                     <input type="text" v-model="hrForm.username" name="username" id="hrUsername"
                                                            autocomplete="given-name"
                                                            class="block w-full h-8 mt-1 border-2 border-gray-300 border-solid rounded-md shadow-sm focus:outline-none sm:text-sm">
@@ -76,7 +126,7 @@
 
                                                 <div class="col-span-6 sm:col-span-4">
                                                     <label for="hrEmail"
-                                                           class="block text-sm font-medium text-gray-700">Password</label>
+                                                           class="block text-sm font-medium text-gray-700">Email</label>
                                                     <input type="email" v-model="hrForm.email" name="email" id="hrEmail"
                                                            autocomplete="given-name"
                                                            class="block w-full h-8 mt-1 border-2 border-gray-300 border-solid rounded-md shadow-sm focus:outline-none sm:text-sm">
@@ -85,8 +135,7 @@
 
                                                 <div class="col-span-6 sm:col-span-4">
                                                     <label for="hrpassword"
-                                                           class="block text-sm font-medium text-gray-700">Confirm
-                                                        Password </label>
+                                                           class="block text-sm font-medium text-gray-700">Password </label>
                                                     <input type="password" v-model="hrForm.password" name="password" id="hrpassword"
                                                            autocomplete="given-name"
                                                            class="block w-full h-8 mt-1 border-2 border-gray-300 border-solid rounded-md shadow-sm focus:outline-none sm:text-sm">
@@ -104,7 +153,7 @@
                                         </button>
                                         <button
                                             class="px-6 py-2 mb-1 mr-1 text-sm font-semibold text-white uppercase transition-all duration-150 ease-linear bg-blue-500 rounded-lg shadow outline-none hover:bg-blue-600 focus:outline-none"
-                                            type="button" v-on:click="toggleModal1()">
+                                            type="button" v-on:click="closeHrShowModel()">
                                             Close
                                         </button>
                                     </div>
@@ -165,20 +214,20 @@
                     </div>
                 </div>
 
-                <div class="w-1/2 px-3 xl:w-1/4">
-                    <div class="flex items-center w-full p-6 text-blue-400 bg-white border rounded-lg">
-                        <svg class="hidden w-16 h-16 mr-4 fill-current lg:block" viewBox="0 0 20 20">
-                            <path
-                                d="M17.431,2.156h-3.715c-0.228,0-0.413,0.186-0.413,0.413v6.973h-2.89V6.687c0-0.229-0.186-0.413-0.413-0.413H6.285c-0.228,0-0.413,0.184-0.413,0.413v6.388H2.569c-0.227,0-0.413,0.187-0.413,0.413v3.942c0,0.228,0.186,0.413,0.413,0.413h14.862c0.228,0,0.413-0.186,0.413-0.413V2.569C17.844,2.342,17.658,2.156,17.431,2.156 M5.872,17.019h-2.89v-3.117h2.89V17.019zM9.587,17.019h-2.89V7.1h2.89V17.019z M13.303,17.019h-2.89v-6.651h2.89V17.019z M17.019,17.019h-2.891V2.982h2.891V17.019z"></path>
-                        </svg>
+<!--                <div class="w-1/2 px-3 xl:w-1/4">-->
+<!--                    <div class="flex items-center w-full p-6 text-blue-400 bg-white border rounded-lg">-->
+<!--                        <svg class="hidden w-16 h-16 mr-4 fill-current lg:block" viewBox="0 0 20 20">-->
+<!--                            <path-->
+<!--                                d="M17.431,2.156h-3.715c-0.228,0-0.413,0.186-0.413,0.413v6.973h-2.89V6.687c0-0.229-0.186-0.413-0.413-0.413H6.285c-0.228,0-0.413,0.184-0.413,0.413v6.388H2.569c-0.227,0-0.413,0.187-0.413,0.413v3.942c0,0.228,0.186,0.413,0.413,0.413h14.862c0.228,0,0.413-0.186,0.413-0.413V2.569C17.844,2.342,17.658,2.156,17.431,2.156 M5.872,17.019h-2.89v-3.117h2.89V17.019zM9.587,17.019h-2.89V7.1h2.89V17.019z M13.303,17.019h-2.89v-6.651h2.89V17.019z M17.019,17.019h-2.891V2.982h2.891V17.019z"></path>-->
+<!--                        </svg>-->
 
-                        <div class="text-gray-700">
-                            <p class="text-3xl font-semibold">1,653</p>
-                            <p>Product Views</p>
-                        </div>
+<!--                        <div class="text-gray-700">-->
+<!--                            <p class="text-3xl font-semibold">1,653</p>-->
+<!--                            <p>Product Views</p>-->
+<!--                        </div>-->
 
-                    </div>
-                </div>
+<!--                    </div>-->
+<!--                </div>-->
 
             </div>
 
@@ -449,6 +498,9 @@ import {defineComponent} from 'vue'
 import {Head} from '@inertiajs/inertia-vue3'
 import Welcome from '@/Jetstream/Welcome.vue'
 import MasterLayout from "@/Layouts/MasterLayout"
+import Banner from "@/Jetstream/Banner"
+import {mapState} from 'vuex'
+import JetNavLink from '@/Jetstream/NavLink.vue'
 
 export default defineComponent({
     props: {
@@ -460,14 +512,20 @@ export default defineComponent({
     },
     mounted() {
     },
+    computed: {
+        ...mapState(['sideBarOpen'])
+    },
     components: {
         MasterLayout,
         Welcome,
-        Head
+        Head,
+        Banner,
+        JetNavLink
     },
     data() {
         return {
             //  showModal: false,
+            sideBarOpen: true,
             showModal1: false,
             hrShowModel: false,
             hrForm: this.$inertia.form({
@@ -487,6 +545,15 @@ export default defineComponent({
         }
     },
     methods: {
+        logout() {
+            this.$inertia.post(route('logout'));
+        },
+        closeHrShowModel() {
+            this.hrShowModel = false
+        },
+        toggleHrModel() {
+            this.hrShowModel = true
+        },
         toggleModal1: function () {
             this.showModal1 = !this.showModal1;
         },

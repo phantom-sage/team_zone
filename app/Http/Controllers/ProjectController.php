@@ -111,7 +111,9 @@ class ProjectController extends Controller
         }
 
         NewProjectCreated::dispatch($project);
-        return 'store';
+        session()->flash('flash.banner', 'New Project added successfully');
+        session()->flash('flash.bannerStyle', 'success');
+        return back();
     }
 
     /**

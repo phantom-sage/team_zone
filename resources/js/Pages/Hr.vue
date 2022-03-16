@@ -1,5 +1,32 @@
 <template>
     <master-layout title="Hr">
+        <slot name="sidebar">
+            <div
+                class="w-1/2 md:w-1/3 lg:w-64 fixed md:top-0 md:left-0 h-screen lg:block bg-gray-100 border-r"
+                :class="sideBarOpen ? '' : 'hidden'"
+                id="main-nav"
+            >
+                <div class="w-full h-20 border-b flex px-4 items-center mb-8">
+                    <p class="font-semibold text-3xl text-blue-400 pl-4">TEAM ZONE</p>
+                </div>
+
+                <div class="mb-4 px-4">
+                    <p class="pl-4 text-sm font-semibold mb-1">MAIN</p>
+                    <div
+                        class="w-full flex items-center text-blue-400 h-10 pl-4 bg-gray-200 hover:bg-gray-200 rounded-lg cursor-pointer"
+                    >
+                        <jet-nav-link :href="route('hr.manager.dashboard')">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
+                                 stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                            </svg>
+                            <span class="text-gray-700">Dashboard</span>
+                        </jet-nav-link>
+                    </div>
+                </div>
+            </div>
+        </slot>
         <div id="home">
             <div class="my-5 mx-auto">
                 <Banner />
@@ -111,56 +138,70 @@
                                             <div class="px-4 py-5 bg-white sm:p-6">
                                                 <div class="grid grid-cols-4 gap-4 ">
                                                     <div class="col-span-6 sm:col-span-4">
-                                                        <label for="hrname"
-                                                               class="block text-sm font-medium text-gray-700">User
-                                                            Name</label>
-                                                        <input type="text" name="hrnamee" id="hrname"
+                                                        <label for="teamMemberName"
+                                                               class="block text-sm font-medium text-gray-700">Name</label>
+                                                        <input type="text" v-model="addTeamMemberForm.name" name="name" id="teamMemberName"
                                                                autocomplete="given-name"
                                                                class="mt-1 h-8 focus:outline-none block w-full shadow-sm sm:text-sm border-solid border-2 border-gray-300 rounded-md">
+                                                        <span class="text-red-600 font-weight-bold" v-if="addTeamMemberForm.errors.name">{{ addTeamMemberForm.errors.name }}</span>
                                                     </div>
 
                                                     <div class="col-span-6 sm:col-span-4">
-                                                        <label for="hremail"
+                                                        <label for="teamMemberUserName"
+                                                               class="block text-sm font-medium text-gray-700">Username</label>
+                                                        <input type="text" v-model="addTeamMemberForm.username" name="username" id="teamMemberUserName"
+                                                               autocomplete="given-name"
+                                                               class="mt-1 h-8 focus:outline-none block w-full shadow-sm sm:text-sm border-solid border-2 border-gray-300 rounded-md">
+                                                        <span class="text-red-600 font-weight-bold" v-if="addTeamMemberForm.errors.username">{{ addTeamMemberForm.errors.username }}</span>
+                                                    </div>
+
+                                                    <div class="col-span-6 sm:col-span-4">
+                                                        <label for="teamMemberEmail"
                                                                class="block text-sm font-medium text-gray-700">E-mail</label>
-                                                        <input type="email" name="hremail" id="hremail"
+                                                        <input type="email" v-model="addTeamMemberForm.email" name="email" id="teamMemberEmail"
                                                                autocomplete="given-name"
                                                                class="mt-1 h-8 focus:outline-none block w-full shadow-sm sm:text-sm border-solid border-2 border-gray-300 rounded-md">
+                                                        <span class="text-red-600 font-weight-bold" v-if="addTeamMemberForm.errors.email">{{ addTeamMemberForm.errors.email }}</span>
                                                     </div>
 
                                                     <div class="col-span-6 sm:col-span-4">
-                                                        <label for="hrpassword"
+                                                        <label for="teamMemberPassword"
                                                                class="block text-sm font-medium text-gray-700">Password</label>
-                                                        <input type="password" name="hrpassword" id="hrpassword"
+                                                        <input type="password" v-model="addTeamMemberForm.password" name="password" id="teamMemberPassword"
                                                                autocomplete="given-name"
                                                                class="mt-1 h-8 focus:outline-none block w-full shadow-sm sm:text-sm border-solid border-2 border-gray-300 rounded-md">
+                                                        <span class="text-red-600 font-weight-bold" v-if="addTeamMemberForm.errors.password">{{ addTeamMemberForm.errors.password }}</span>
                                                     </div>
 
+
                                                     <div class="col-span-6 sm:col-span-4">
-                                                        <label for="hrpassword"
-                                                               class="block text-sm font-medium text-gray-700">Confirm
-                                                            Password </label>
-                                                        <input type="password" name="hrpassword" id="hrpassword"
-                                                               autocomplete="given-name"
-                                                               class="mt-1 h-8 focus:outline-none block w-full shadow-sm sm:text-sm border-solid border-2 border-gray-300 rounded-md">
+                                                        <label for="type"
+                                                               class="block text-sm font-medium text-gray-700">Type</label>
+                                                        <select v-model="addTeamMemberForm.type" id="type" name="type"
+                                                                class="block w-full h-8 mt-1 bg-white border-2 border-gray-300 border-solid rounded-md shadow-sm focus:outline-none sm:text-sm">
+                                                            <option value="project_manager">Project Manager</option>
+                                                            <option value="team_member">Team Member</option>
+                                                        </select>
+                                                        <span class="text-red-600 font-weight-bold" v-if="addTeamMemberForm.errors.type">{{ addTeamMemberForm.errors.type }}</span>
                                                     </div>
+
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div><div
+                                        class="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
+                                        <button
+                                            class="bg-blue-500 hover:bg-blue-600 focus:outline-none rounded-lg px-6 py-2 text-white font-semibold shadow uppercase text-sm outline-none  mr-1 mb-1 ease-linear transition-all duration-150"
+                                            type="button" v-on:click="addTeamMember()">
+                                            Add
+                                        </button>
+                                        <button
+                                            class="bg-blue-500 hover:bg-blue-600 focus:outline-none rounded-lg px-6 py-2 text-white font-semibold shadow uppercase text-sm outline-none  mr-1 mb-1 ease-linear transition-all duration-150"
+                                            type="button" v-on:click="toggleModal()">
+                                            Close
+                                        </button>
+                                    </div>
+
                                     </form>
-                                </div>
-                                <!--footer-->
-                                <div
-                                    class="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
-                                    <button
-                                        class="bg-blue-500 hover:bg-blue-600 focus:outline-none rounded-lg px-6 py-2 text-white font-semibold shadow uppercase text-sm outline-none  mr-1 mb-1 ease-linear transition-all duration-150"
-                                        type="button" v-on:click="toggleModal()">
-                                        Add
-                                    </button>
-                                    <button
-                                        class="bg-blue-500 hover:bg-blue-600 focus:outline-none rounded-lg px-6 py-2 text-white font-semibold shadow uppercase text-sm outline-none  mr-1 mb-1 ease-linear transition-all duration-150"
-                                        type="button" v-on:click="toggleModal()">
-                                        Close
-                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -181,7 +222,7 @@
                                     <div class="font-semibold text-center">E-MAIL</div>
                                 </th>
                                 <th class="p-2">
-                                    <div class="font-semibold text-center">PROJECT NAME</div>
+                                    <div class="font-semibold text-center">TYPE</div>
                                 </th>
                                 <th class="p-2">
                                     <div class="font-semibold text-center">ACTIONS</div>
@@ -191,17 +232,17 @@
                             <!-- Table body -->
                             <tbody class="font-medium divide-y divide-gray-100 text-gray-600 text-sm">
                             <!-- Row1 -->
-                            <tr class="border-b border-gray-200 hover:bg-gray-200">
+                            <tr v-for="team_member in team_members" class="border-b border-gray-200 hover:bg-gray-200">
                                 <td class="p-2">
                                     <div class="flex">
-                                        <div class="text-gray-800 py-3 text-left whitespace-nowrap">Omer Ahmed</div>
+                                        <div class="text-gray-800 py-3 text-left whitespace-nowrap">{{ team_member.name }}</div>
                                     </div>
                                 </td>
                                 <td class="p-2">
-                                    <div class="text-center">Mohamed@gmail.com</div>
+                                    <div class="text-center">{{ team_member.email }}</div>
                                 </td>
                                 <td class="p-2">
-                                    <div class="text-center">Team Zone</div>
+                                    <div class="text-center">{{ team_member.type }}</div>
                                 </td>
                                 <td class="py-3 px-6 text-center">
                                     <div class="flex item-center justify-center">
@@ -224,112 +265,6 @@
                                     </div>
                                 </td>
                             </tr>
-                            <!--End of Row1 -->
-                            <!-- Row2 -->
-                            <tr class="border-b border-gray-200 hover:bg-gray-200">
-                                <td class="p-2">
-                                    <div class="flex">
-                                        <div class="text-gray-800 py-3 text-left whitespace-nowrap">Omer Ahmed</div>
-                                    </div>
-                                </td>
-                                <td class="p-2">
-                                    <div class="text-center">Mohamed@gmail.com</div>
-                                </td>
-                                <td class="p-2">
-                                    <div class="text-center">Team Zone</div>
-                                </td>
-                                <td class="py-3 px-6 text-center">
-                                    <div class="flex item-center justify-center">
-                                        <div
-                                            class="w-4 mr-2 transform hover:text-yellow-500 hover:scale-110 cursor-pointer">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                 stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                      d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                                            </svg>
-                                        </div>
-                                        <div
-                                            class="w-4 mr-2 transform hover:text-red-500 hover:scale-110 cursor-pointer">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                 stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <!--End of Row2 -->
-                            <!-- Row3 -->
-                            <tr class="border-b border-gray-200 hover:bg-gray-200">
-                                <td class="p-2">
-                                    <div class="flex">
-                                        <div class="text-gray-800 py-3 text-left whitespace-nowrap">Omer Ahmed</div>
-                                    </div>
-                                </td>
-                                <td class="p-2">
-                                    <div class="text-center">Mohamed@gmail.com</div>
-                                </td>
-                                <td class="p-2">
-                                    <div class="text-center">Team Zone</div>
-                                </td>
-                                <td class="py-3 px-6 text-center">
-                                    <div class="flex item-center justify-center">
-                                        <div
-                                            class="w-4 mr-2 transform hover:text-yellow-500 hover:scale-110 cursor-pointer">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                 stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                      d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                                            </svg>
-                                        </div>
-                                        <div
-                                            class="w-4 mr-2 transform hover:text-red-500 hover:scale-110 cursor-pointer">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                 stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <!--End of Row3 -->
-                            <!-- Row4 -->
-                            <tr class="border-b border-gray-200 hover:bg-gray-200">
-                                <td class="p-2">
-                                    <div class="flex">
-                                        <div class="text-gray-800 py-3 text-left whitespace-nowrap">Omer Ahmed</div>
-                                    </div>
-                                </td>
-                                <td class="p-2">
-                                    <div class="text-center">Mohamed@gmail.com</div>
-                                </td>
-                                <td class="p-2">
-                                    <div class="text-center">Zone</div>
-                                </td>
-                                <td class="py-3 px-6 text-center">
-                                    <div class="flex item-center justify-center">
-                                        <div
-                                            class="w-4 mr-2 transform hover:text-yellow-500 hover:scale-110 cursor-pointer">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                 stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                      d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                                            </svg>
-                                        </div>
-                                        <div
-                                            class="w-4 mr-2 transform hover:text-red-500 hover:scale-110 cursor-pointer">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                 stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <!--End of Row4 -->
                             </tbody>
                         </table>
                     </div>
@@ -343,20 +278,38 @@
 <script>
 import Banner from "@/Jetstream/Banner";
 import MasterLayout from "@/Layouts/MasterLayout";
+import {mapState} from "vuex";
+import JetNavLink from '@/Jetstream/NavLink.vue'
 
 export default {
     name: "Hr",
     props: {
         session_hr_manager_id: Object,
-        hr_manager_name: Object
+        hr_manager_name: Object,
+        team_members: Object
+    },
+    mounted() {
+        console.log(this.team_members)
+    },
+    computed: {
+        ...mapState(['sideBarOpen'])
     },
     components: {
         Banner,
-        MasterLayout
+        MasterLayout,
+        JetNavLink
     },
     data() {
         return {
+            sideBarOpen: true,
             showModal: false,
+            addTeamMemberForm: this.$inertia.form({
+                name: '',
+                username: '',
+                password: '',
+                email: '',
+                type: ''
+            }),
             logoutForm: this.$inertia.form({
                 hr_manager_id: this.session_hr_manager_id
             })
@@ -369,6 +322,14 @@ export default {
         },
         logout() {
             this.logoutForm.delete(this.route('hr.logout'))
+        },
+        addTeamMember() {
+            this.addTeamMemberForm.post(this.route('team_members.store'), {
+                onSuccess: () => {
+                    this.showModal = false
+                    this.addTeamMemberForm.reset('name', 'username', 'password', 'email', 'type')
+                }
+            });
         }
     }
 }

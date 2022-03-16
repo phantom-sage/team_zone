@@ -3,7 +3,8 @@
         <Head :title="title"/>
         <div class="flex justify-between">
             <div class="grid w-2/12">
-                <SideBar/>
+<!--                <SideBar/>-->
+                <slot name="sidebar"></slot>
             </div>
             <div class="grid w-10/12">
                 <div class="container mx-auto">

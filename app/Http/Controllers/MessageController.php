@@ -51,7 +51,9 @@ class MessageController extends Controller
             if ($user && $team_member) {
                 $user->messages()->attach($message['id']);
                 $team_member->messages()->attach($message['id']);
-                return 'store';
+                session()->flash('flash.banner', 'Send successfully');
+                session()->flash('flash.bannerStyle', 'success');
+                return back();
             } else {
                 abort(404, 'NOT FOUND');
             }
@@ -61,7 +63,9 @@ class MessageController extends Controller
             if ($user && $team_member) {
                 $team_member->messages()->attach($message['id']);
                 $user->messages()->attach($message['id']);
-                return 'store';
+                session()->flash('flash.banner', 'Send successfully');
+                session()->flash('flash.bannerStyle', 'success');
+                return back();
             } else {
                 abort(404, 'NOT FOUND');
             }
@@ -71,12 +75,14 @@ class MessageController extends Controller
             if ($first_team_member && $second_team_member) {
                 $first_team_member->messages()->attach($message['id']);
                 $second_team_member->messages()->attach($message['id']);
-                return 'store';
+                session()->flash('flash.banner', 'Send successfully');
+                session()->flash('flash.bannerStyle', 'success');
+                return back();
             } else {
                 abort(404, 'NOT FOUND');
             }
         }
-        abort(404, 'NOT FOUND');
+        return abort(404, 'NOT FOUND');
     }
 
     /**

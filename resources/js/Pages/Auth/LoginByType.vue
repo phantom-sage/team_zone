@@ -3,7 +3,7 @@
         <h1 class="mt-5 text-6xl font-bold text-center text-blue-400">TeamZone</h1>
         <form @submit.prevent="submit" class="px-5 my-10 mx-96" method="POST">
                 <div class="overflow-hidden border border-gray-300 shadow-2xl rounded-xl">
-                    <h1 class="mt-5 text-3xl font-bold text-center text-blue-400">LOGIN</h1>
+                    <h1 class="mt-5 text-3xl font-bold text-center text-blue-400">LOGIN AS</h1>
                     <div class="px-4 py-5 bg-white sm:p-6">
                         <div class="grid grid-cols-4 gap-4 ">
                             <div class="col-span-6 sm:col-span-4">
