@@ -35,7 +35,7 @@ return [
 
     'pdf' => [
         'enabled' => true,
-        'binary'  => '"vendor\bin\wkhtmltopdf-amd64.bat"',
+        'binary'  => '/usr/bin/wkhtmltopdf-amd64',
         'timeout' => false,
         'options' => [],
         'env'     => [],
@@ -43,7 +43,7 @@ return [
 
     'image' => [
         'enabled' => true,
-        'binary'  => '"vendor\bin\wkhtmltoimage-amd64.bat"',
+        'binary'  => '/usr/bin/wkhtmltoimage-amd64',
         'timeout' => false,
         'options' => [],
         'env'     => [],
