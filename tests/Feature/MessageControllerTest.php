@@ -137,7 +137,7 @@ final class MessageControllerTest extends TestCase
         ];
 
             $resp = $this->post(route('messages.store'), $data);
-            $resp->assertOk();
+            $resp->assertStatus(302);
 
 
             $this->assertInstanceOf(Message::class, $first_team_member->messages()->first());
@@ -177,7 +177,7 @@ final class MessageControllerTest extends TestCase
             ];
 
             $resp = $this->post(route('messages.store'), $data);
-            $resp->assertOk();
+            $resp->assertStatus(302);
 
             $this->assertInstanceOf(Message::class, $user->messages()->first());
             $this->assertInstanceOf(Message::class, $team_member->messages()->first());
@@ -214,7 +214,7 @@ final class MessageControllerTest extends TestCase
             ];
 
             $resp = $this->post(route('messages.store'), $data);
-            $resp->assertOk();
+            $resp->assertStatus(302);
             $this->assertInstanceOf(Message::class, $user->messages()->first());
             $this->assertInstanceOf(Message::class, $team_member->messages()->first());
         }

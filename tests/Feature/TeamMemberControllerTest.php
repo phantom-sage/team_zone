@@ -107,7 +107,7 @@ final class TeamMemberControllerTest extends TestCase
             'type' => 'project_manager',
         ];
         $resp = $this->post(route('team_members.store'), $data);
-        $resp->assertOk();
+        $resp->assertStatus(302);
         $this->assertDatabaseCount('team_members', 1);
         $this->assertSame('project_manager', TeamMember::first()['type'] ?? null);
     }
@@ -128,7 +128,7 @@ final class TeamMemberControllerTest extends TestCase
             'type' => 'team_member',
         ];
         $resp = $this->post(route('team_members.store'), $data);
-        $resp->assertOk();
+        $resp->assertStatus(302);
         $this->assertDatabaseCount('team_members', 1);
         $this->assertSame('team_member', TeamMember::first()['type'] ?? null);
     }

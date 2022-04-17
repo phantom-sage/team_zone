@@ -26,3 +26,6 @@ Route::post('/users/client/login', [LoginController::class, 'login_as_client']);
 Route::post('/client/project', [ProjectController::class, 'get_client_project']);
 
 Route::apiResource('projects', ProjectController::class);
+
+
+Route::post('client/rate/{project}', [\App\Http\Controllers\ProjectController::class, 'client_rate_project_after_end']);

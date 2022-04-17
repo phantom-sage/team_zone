@@ -34,10 +34,11 @@ final class UserControllerTest extends TestCase
                 'from_date' => now()->format('Y-m-d'),
                 'to_date' => now()->format('Y-m-d'),
                 'email' => $user['email'] ?? null,
+                'project' => 'all'
             ];
 
             $resp = $this->actingAs($user)->post(route('reports.send.email'), $data);
-            $resp->assertOk();
+            $resp->assertStatus(302);
             Mail::assertSent(SendReport::class);
         }
     }
@@ -53,6 +54,7 @@ final class UserControllerTest extends TestCase
             'from_date' => now()->format('Y-m-d'),
             'to_date' => now()->format('Y-m-d'),
             'email' => $this->faker->unique()->safeEmail(),
+            'project' => 'all'
         ];
 
         $resp = $this->post(route('reports.send.email'), $data);
@@ -71,10 +73,11 @@ final class UserControllerTest extends TestCase
         $data = [
             'from_date' => now()->format('Y-m-d'),
             'to_date' => now()->format('Y-m-d'),
+            'project' => 'all'
         ];
 
         $resp = $this->post(route('reports.export.pdf'), $data);
-        $resp->assertNotFound();
+        $resp->assertOk();
     }
 
     /**
@@ -96,6 +99,7 @@ final class UserControllerTest extends TestCase
         $data = [
             'from_date' => now(),
             'to_date' => now()->addDays(10),
+            'project' => 'all'
         ];
 
         $resp = $this->post(route('reports.export.pdf'), $data);
@@ -115,9 +119,10 @@ final class UserControllerTest extends TestCase
         $data = [
             'from_date' => now(),
             'to_date' => now()->addDays(10),
+            'project' => 'all'
         ];
 
         $resp = $this->post(route('reports.store'), $data);
-        $resp->assertOk();
+        $resp->assertStatus(200);
     }
 }

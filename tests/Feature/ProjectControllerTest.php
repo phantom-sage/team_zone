@@ -67,7 +67,7 @@ final class ProjectControllerTest extends TestCase
             $resp = $this->post(route('projects.store'), $data);
             Event::assertDispatched(NewProjectCreated::class);
 
-            $resp->assertOk();
+            $resp->assertStatus(302);
             $this->assertDatabaseCount('projects', 1);
             $this->assertDatabaseCount('clients', 1);
         }

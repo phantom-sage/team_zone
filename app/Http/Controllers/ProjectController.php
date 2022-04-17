@@ -58,7 +58,9 @@ class ProjectController extends Controller
         $project->update([
             'rate' => $data['rate'],
         ]);
-        return 'rate';
+        return response()->json([
+            'message' => 'Rated successfully',
+        ]);
     }
 
 

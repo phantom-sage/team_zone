@@ -23,6 +23,21 @@ final class ProjectControllerTest extends TestCase
     }
 
     /**
+     * rate client.
+     *
+     * @test
+     */
+    public function rate_client(): void
+    {
+        Project::factory()->create();
+        $project_id = Project::first()->id ?? null;
+        $resp = $this->postJson('/api/client/rate/' . $project_id, [
+            'rate' => 1
+        ]);
+        $resp->dump();
+    }
+
+    /**
      * get client not found.
      *
      * @test

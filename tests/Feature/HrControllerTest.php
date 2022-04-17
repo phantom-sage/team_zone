@@ -50,6 +50,7 @@ class HrControllerTest extends TestCase
      */
     public function hr_store_route(): void
     {
+        $this->withExceptionHandling();
         $data = [
             'name' => $this->faker->name(),
             'username' => $this->faker->name(),
@@ -57,7 +58,7 @@ class HrControllerTest extends TestCase
             'password' => 'password',
         ];
         $resp = $this->post(route('hrs.store'), $data);
-        $resp->assertOk();
+        $resp->assertStatus(302);
         $this->assertDatabaseCount('hrs', 1);
     }
 
